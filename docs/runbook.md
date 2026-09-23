@@ -22,6 +22,8 @@ cd /home/ymzx/LightX2V-V100
 
 上游分支是 Apache-2.0 下游实验版本，commit 已固定在 `config/upstream-commits.txt`。它要求完整的 H3 模型/转换后 pruned transformer 和 conditioning bundle；本仓库不分发这些文件。
 
+如果拿到的是 Comfy-Org 的单文件 pruned BF16 DiT，可用 `config/official-fl2va-transformer.json` 作为上游转换器的 `--base-config`；转换会产生新的分片文件，预计还需要约 40GiB 磁盘空间。转换前确认输入文件完整，且不要把 INT8/GGUF 文件误传给 BF16 curve 转换器。
+
 ## 3. 最小 TP4 gate
 
 以 LightX2V 文档的 864×480、124 帧配置为起点，先把 `--trials` 设为 1、开启 finite check，并把输出写入 `reports/`。示例命令见上游 `docs/minimax_h3_v100_tp4.md`；运行前必须把 `--model-path`、`--transformer-path` 和 `--condition-path` 替换成受控路径。
@@ -37,4 +39,3 @@ bash /path/to/minimax-h3-4gpu/scripts/benchmark_gpu.sh reports/gpu-samples.csv
 ```
 
 保留 `benchmark.json`、`effective-config.json`、GPU CSV、NCCL 门禁和输出媒体校验；不要提交模型、prompt 中的隐私内容、SSH 凭据或大文件。
-
