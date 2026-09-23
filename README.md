@@ -72,4 +72,4 @@ bash scripts/launch_env.sh
 
 ## 许可和权重
 
-本仓库新增脚本采用 MIT。上游组件按各自许可证使用：`dg1kjd` 插件为 GPL-3.0，官方 MiniMax H3 使用 MiniMax H3 Community License，模型权重和派生量化文件均不随本仓库分发。商业部署前必须自行阅读并接受对应许可证。
+本仓库新增脚本采用 MIT。上游组件按各自许可证使用：`dg1kjd` 插件为 GPL-3.0，官方 MiniMax H3 使用 MiniMax H3 Community License，模型权重和派生量化文件均不随本仓库分发。该模型许可证当前列出的地域排除包括美国、欧盟、英国和韩国；商业部署前必须自行阅读当前版本协议、NOTICE 和安全限制。
