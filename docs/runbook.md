@@ -48,6 +48,8 @@ export PYTHONPATH=/home/ymzx/h3-extras:/home/ymzx/LightX2V-V100
 
 本机 16GB 卡不要直接套用 32GB benchmark。第一次只验证 480×864、短时长和低步数；如果单卡峰值超过约 14GiB，先减少序列长度或改成阶段化卸载。
 
+如果需要验证 640×1152，可改用仓库中的 `config/lightx2v-v100-tp4-16gb-chunked.experimental.json`。该配置将 `h3_ff_chunk_rows` 设为 `4096`，实测 4×V100 在 640×1152、124 帧、20 步通过，单卡峰值约 13.99 GiB allocated / 14.70 GiB reserved（15.02 / 15.78 GB），pipeline 约 289 秒。它会改变 SwiGLU 分块和舍入顺序，输出不保证与未分块路径逐位一致；只用于真实 conditioning 和 VAE 画质回归，不应直接替换 `tp4-safe` 默认配置。原始 640×1152 路径缺约 556 MiB OOM，CPU block offload 也不适合这台约 32 GiB 内存的主机。
+
 ## 4. 记录结果
 
 生成期间另开终端运行：

@@ -58,7 +58,9 @@ bash scripts/launch_env.sh
 
 ## 已验证的 4×16GB gate
 
-2026-09-23 在目标工作站完成了真实 TP4 DiT-only gate：FP16 权重分片加载约 85.7 秒，480×864、124 帧、20 次评估用时约 124.16 秒（约 6.18 秒/步），每卡显存峰值约 13.4 GiB，latent 输出为 finite。该结果证明 4×V100-SXM2-16GB 可以共同运行这条分片路径；conditioning 使用的是随机合成夹具，不能作为真实画质或生产吞吐承诺。复现命令和 `--transformer-path` 要求见 [实机运行手册](docs/runbook.md)，硬件细节见 [门禁记录](docs/hardware-2026-09-23.md)。
+2026-09-23 在目标工作站完成了真实 TP4 DiT-only gate：FP16 权重分片加载约 85.7 秒，480×864、124 帧、20 次评估用时约 124.16 秒（约 6.18 秒/步），每卡峰值约 12.48 GiB allocated（13.40 GB），latent 输出为 finite。该结果证明 4×V100-SXM2-16GB 可以共同运行这条分片路径；conditioning 使用的是随机合成夹具，不能作为真实画质或生产吞吐承诺。复现命令和 `--transformer-path` 要求见 [实机运行手册](docs/runbook.md)，硬件细节见 [门禁记录](docs/hardware-2026-09-23.md)。
+
+2026-09-24 又完成了一个显式实验开关 `h3_ff_chunk_rows=4096`：它将 H3 的 SwiGLU 前馈按序列行分块，在相同 480×864 门禁上把峰值 allocated 降到约 12.22 GiB（13.12 GB），并使 640×1152、124 帧、20 步通过（峰值约 13.99 GiB / 14.70 GiB，约 15.02 / 15.78 GB，约 289 秒）。未分块的 640×1152 路径会 OOM；CPU block offload 会耗尽约 32 GiB 主机内存。分块会改变 GEMM 舍入顺序，latent 不保证与未分块逐位一致，因此配置仍标为实验用途，完整数据和回归边界见 [分块前馈实验记录](docs/chunked-ff-2026-09-24.md)。
 
 ## 目录
 

@@ -1,0 +1,39 @@
+--- a/lightx2v/models/networks/minimax_h3/infer/transformer_infer.py
++++ b/lightx2v/models/networks/minimax_h3/infer/transformer_infer.py
+@@ -26,6 +26,9 @@ class MiniMaxH3TransformerInfer(BaseTransformerInfer):
+         self.h3_v100_fp16 = bool(config.get("h3_v100_fp16", False))
+         self.h3_adaln_curve = bool(config.get("h3_adaln_curve", False))
+         self.h3_finite_check = bool(config.get("h3_finite_check", False))
++        # Opt-in row chunking bounds the large SwiGLU intermediate on low-VRAM GPUs.
++        # Zero keeps the original full-sequence path for compatibility.
++        self.h3_ff_chunk_rows = max(0, int(config.get("h3_ff_chunk_rows", 0)))
+         if config.get("seq_parallel", False):
+             self.seq_p_group = config["device_mesh"].get_group(mesh_dim="seq_p")
+             parallel = config.get("parallel", {})
+@@ -108,6 +111,26 @@ class MiniMaxH3TransformerInfer(BaseTransformerInfer):
+         return weights.to_out.apply(out.to(self.infer_dtype))
+ 
+     def _ff(self, weights, hidden_states):
++        if self.h3_v100_fp16 and self.h3_ff_chunk_rows > 0:
++            # The SwiGLU intermediate is [rows, 14336] in FP32. Compute it in
++            # bounded row chunks so 16GB Volta cards do not need the full
++            # sequence-sized activation at once. Each chunk still runs the
++            # same TP projections and FP32 scaling as the reference path.
++            rows = hidden_states.shape[0]
++            output = torch.empty(
++                (rows, self.hidden_size),
++                device=hidden_states.device,
++                dtype=torch.float32,
++            )
++            chunk_rows = self.h3_ff_chunk_rows
++            for start in range(0, rows, chunk_rows):
++                end = min(start + chunk_rows, rows)
++                value, gate = weights.in_proj.apply(hidden_states[start:end]).chunk(2, dim=-1)
++                activated = value.float() * F.silu(gate.float())
++                projected = weights.out_proj.apply((activated / 256.0).to(self.infer_dtype))
++                output[start:end].copy_(projected.float() * 256.0)
++                del value, gate, activated, projected
++            return output
+         value, gate = weights.in_proj.apply(hidden_states).chunk(2, dim=-1)
+         if self.h3_v100_fp16:
+             # SwiGLU is the other observed FP16 overflow site. Evaluate the

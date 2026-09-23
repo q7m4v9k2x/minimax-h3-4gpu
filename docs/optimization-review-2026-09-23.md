@@ -77,3 +77,13 @@ VAE 分块只能解决解码峰值，不能消除 DiT 的 `N²` 注意力成本�
 | `tp4-queue` | 单 TP4 常驻 worker、有界队列、conditioning LRU、失败重启 | 对外 API 的并发控制 |
 
 每次放宽几何或改变注意力后端，都应记录：`N_total`、步数、每卡峰值 allocated/reserved、每步时延、NCCL 错误、输出 finite、VAE tile 峰值和队列等待时间。没有这些数据，不应宣称“高分辨率”“高并发”或“满载”。
+
+## 2026-09-24 实测补充：SwiGLU 行分块
+
+已在下游推理器加入可选的 `h3_ff_chunk_rows`。设为 `4096` 时，SwiGLU 的大中间张量按序列行分块，默认值 `0` 仍走原始路径。目标工作站的 TP4 对比结果如下：
+
+- 480×864、124 帧、20 步：分块峰值约 12.22 / 12.81 GiB（13.12 / 13.76 GB）allocated/reserved，DiT 约 121.11 秒；未分块峰值约 12.48 / 13.33 GiB（13.40 / 14.32 GB），123.68 秒。两者均 finite。
+- 640×1152、124 帧、20 步：分块通过，峰值约 13.99 / 14.70 GiB（15.02 / 15.78 GB），DiT 约 288.52 秒；未分块同条件 OOM，约差 556 MiB。
+- CPU block offload 在这台约 32 GiB 主机上会耗尽主机内存并被系统终止，不能作为高分辨率兜底。
+
+分块改变了 GEMM 批次和舍入顺序。相同 480×864 prompt/seed 的 video latent 最大绝对差约 3.91、RMSE 约 0.108，不能按 SHA256 逐位比较；真实 conditioning 和最终 VAE 输出必须单独做画质回归。因此该开关只进入 `tp4-highres-experimental`，不改变 `tp4-safe` 默认值。
