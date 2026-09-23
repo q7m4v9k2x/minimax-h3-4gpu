@@ -1,0 +1,12 @@
+reports/*.json
+reports/*.csv
+reports/*.log
+reports/*.mp4
+reports/*.png
+.venv/
+__pycache__/
+*.pyc
+.env
+model/
+models/
+weights/

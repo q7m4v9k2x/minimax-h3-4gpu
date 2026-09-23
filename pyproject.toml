@@ -1,0 +1,10 @@
+[project]
+name = "minimax-h3-4gpu"
+version = "0.1.0"
+description = "Read-only preflight and deployment helpers for MiniMax H3 on four Tesla V100 GPUs"
+requires-python = ">=3.10"
+dependencies = []
+license = { file = "LICENSE" }
+
+[tool.ruff]
+line-length = 120
