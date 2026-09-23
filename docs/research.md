@@ -69,6 +69,8 @@
 
 `Abiray/MiniMax-H3-GGUF` 在 ModelScope 可直接访问，单任务的 Q4_K_M 组合大约为：DiT 19.9GB、Qwen3-VL 文本编码器 14.6GB、视频 VAE 5.2GB、音频 VAE 0.6GB，总计约 40.3GB。它比官方 BF16 更接近本机的磁盘/主机内存预算，且 ComfyUI-GGUF 已能识别 `wan` DiT 和 `qwen3vl` 文本编码器。
 
+工作站已验证 ModelScope 直连 HEAD：<https://www.modelscope.cn/models/Abiray/MiniMax-H3-GGUF/resolve/master/unet/MiniMax-H3-FL2VA-Q4_K_M.gguf> 返回 HTTP 200。HF 在该工作站直连超时，因此实际下载优先使用 ModelScope；仍需遵守该模型的 LICENSE/NOTICE。
+
 但该仓库只声明单卡/分层卸载工作流，没有 H3 扩散 TP4 实现，也没有 V100 实测。GGUF CUDA kernel 是否覆盖 SM70、解量化后激活是否溢出，必须先做首层/短视频 dry-run；不能把它直接接到 vLLM/SGLang 的语言模型 TP 参数上。当前项目把它列为 **第二阶段候选**，而不是已验证方案。
 
 ## 尚未宣称的内容
