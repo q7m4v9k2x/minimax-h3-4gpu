@@ -56,6 +56,10 @@ bash scripts/launch_env.sh
 5. 固定 seed，记录每卡峰值显存、NVLink/P2P 带宽、功耗、时延和输出是否 finite；每次只改一个变量。
 6. 只有单请求稳定后，才测试并发。TP4 一次生成会占用 4 张卡；并发请求应排队，不能把同一 TP 组当成四个独立 worker。
 
+## 已验证的 4×16GB gate
+
+2026-09-23 在目标工作站完成了真实 TP4 DiT-only gate：FP16 权重分片加载约 85.7 秒，480×864、124 帧、20 次评估用时约 124.16 秒（约 6.18 秒/步），每卡显存峰值约 13.4 GiB，latent 输出为 finite。该结果证明 4×V100-SXM2-16GB 可以共同运行这条分片路径；conditioning 使用的是随机合成夹具，不能作为真实画质或生产吞吐承诺。复现命令和 `--transformer-path` 要求见 [实机运行手册](docs/runbook.md)，硬件细节见 [门禁记录](docs/hardware-2026-09-23.md)。
+
 ## 目录
 
 | 路径 | 用途 |

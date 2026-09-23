@@ -26,7 +26,25 @@ cd /home/ymzx/LightX2V-V100
 
 ## 3. 最小 TP4 gate
 
-以 LightX2V 文档的 864×480、124 帧配置为起点，先把 `--trials` 设为 1、开启 finite check，并把输出写入 `reports/`。示例命令见上游 `docs/minimax_h3_v100_tp4.md`；运行前必须把 `--model-path`、`--transformer-path` 和 `--condition-path` 替换成受控路径。
+以 LightX2V 文档的 864×480、124 帧配置为起点，先把 `--trials` 设为 1、开启 finite check，并把输出写入 `reports/`。注意转换后的 pruned checkpoint 是平铺目录，必须显式传 `--transformer-path`，不能使用脚本默认的 `model_path/transformer`：
+
+```bash
+export CUDA_DEVICE_ORDER=PCI_BUS_ID CUDA_VISIBLE_DEVICES=1,2,3,4
+export DTYPE=FP16 SENSITIVE_LAYER_DTYPE=FP32 LIGHTX2V_MINIMAL_IMPORT=1
+export PYTHONPATH=/home/ymzx/h3-extras:/home/ymzx/LightX2V-V100
+/home/ymzx/ComfyUI/venv/bin/torchrun --standalone --nproc_per_node=4 \
+  /home/ymzx/LightX2V-V100/tools/minimax_h3/run_tp4_benchmark.py \
+  --config /path/to/lightx2v-v100-tp4-16gb.experimental.json \
+  --model-path /home/ymzx/models/minimax-h3/lightx2v-fl2v-pruned \
+  --transformer-path /home/ymzx/models/minimax-h3/lightx2v-fl2v-pruned \
+  --task t2av --condition-path /path/to/conditioning.safetensors \
+  --prompt 'test prompt' --case-id h3-tp4 --frames 124 --nominal-seconds 5 \
+  --height 480 --width 864 --trials 1 --block-finite-check \
+  --evidence-dir /path/to/evidence --report /path/to/report.json \
+  --effective-config /path/to/effective.json
+```
+
+2026-09-23 的实测摘要见 `docs/hardware-2026-09-23.md`。本地 conditioning 夹具只能验证加载、TP 通信和有限输出；接入真实文本编码器与 VAE 后还需单独验收画质、端到端时延和错误恢复。
 
 本机 16GB 卡不要直接套用 32GB benchmark。第一次只验证 480×864、短时长和低步数；如果单卡峰值超过约 14GiB，先减少序列长度或改成阶段化卸载。
 
