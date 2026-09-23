@@ -13,8 +13,8 @@
   - [dg1kjd/comfyui-v100-sxm2-minimax-h3](https://github.com/dg1kjd/comfyui-v100-sxm2-minimax-h3)：ComfyUI Ulysses sequence parallel，模型副本驻留在每张卡；公开测试是 8×32GB，不能直接当作 4×16GB 的 TP 方案。
   - [rwashy/H3-V100](https://github.com/rwashy/H3-V100)：针对 V100 的 INT8 ConvRot/缩放 FP8 和显存管理，公开验证覆盖 1/2 张 16GB 卡；四卡并行仍需本机验证。
   - [Amduraznak/minimax-h3-fp16-fix](https://github.com/Amduraznak/minimax-h3-fp16-fix)：V100 原生 FP16 数值安全修复，可作为 ComfyUI 单卡/分片路径的参考。
-- 本仓库采用的目标架构是 **LightX2V 风格的真实 TP4**：4 卡共同持有分片，文本编码器也分片或卸载，VAE 单独解码；不把“4 卡分别复制完整模型”宣称为四卡共享显存。
-- 由于工作站只有约 32GiB 主机内存，官方 BF16 权重和完整双分区服务不适合直接部署。官方 VAE 文件本身约 11GiB；第一阶段应使用 pruned INT8 DiT + V100 兼容的 INT8/CPU 文本编码器，并按阶段释放组件，先通过 5 秒、低分辨率 T2VA smoke test，再逐步增加分辨率和时长。
+- 本仓库采用的目标架构是 **LightX2V 风格的真实 TP4**：4 卡共同持有分片，文本编码器也分片或卸载，VAE 单独解码；不把“4 卡分别复制完整模型”宣称为四卡共享显存。首选是 AdaLN-pruned 的 FP16/原生 PyTorch SDPA 路径；INT8/GGUF 只作为经过 SM70 内核检查后的存储压缩备选。
+- 由于工作站只有约 32GiB 主机内存，官方 BF16 权重和完整双分区服务不适合直接部署。官方 VAE 文件本身约 11GiB；第一阶段应使用 AdaLN-pruned DiT + 预计算文本 conditioning 或 CPU/分片文本编码器，并按阶段释放组件，先通过 5 秒、低分辨率 T2VA smoke test，再逐步增加分辨率和时长。
 
 ## 快速开始
 

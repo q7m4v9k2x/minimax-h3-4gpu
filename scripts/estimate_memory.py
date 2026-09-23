@@ -16,10 +16,12 @@ class Weight:
 
 
 WEIGHTS = {
+    "dit_pruned_fp16": Weight("AdaLN-pruned FP16 DiT", 37.46, "community file statistic; TP4 theory only"),
     "dit_pruned_int8": Weight("pruned INT8 ConvRot DiT", 20.97e9 / GIB, "community measurement; V100-compatible kernel required"),
     "dit_bf16": Weight("full BF16 DiT", 66.28e9 / GIB, "official-style storage; not a V100 Tensor Core format"),
     "te_int8": Weight("INT8 ConvRot text encoder", 27.14e9 / GIB, "community measurement"),
     "te_bf16": Weight("BF16 text encoder", 51.51e9 / GIB, "Qwen3-VL based; V100 needs FP16/CPU handling"),
+    "te_precomputed": Weight("precomputed text conditioning", 0.0, "encoder is outside the DiT process"),
     "vae": Weight("official video + audio VAE", (10.42e9 + 0.61e9) / GIB, "official HF metadata; community quantized variants may be smaller"),
 }
 
@@ -34,7 +36,7 @@ def main() -> int:
     ap.add_argument("--ram-gib", type=float, default=32)
     args = ap.parse_args()
     print("MiniMax H3 memory estimate (upper bound, not a benchmark)\n")
-    for dit_key, te_key in (("dit_pruned_int8", "te_int8"), ("dit_bf16", "te_bf16")):
+    for dit_key, te_key in (("dit_pruned_fp16", "te_precomputed"), ("dit_pruned_int8", "te_int8"), ("dit_bf16", "te_bf16")):
         dit, te, vae = WEIGHTS[dit_key], WEIGHTS[te_key], WEIGHTS["vae"]
         all_held = dit.gib + te.gib + vae.gib
         sequential = max(dit.gib, te.gib) + vae.gib

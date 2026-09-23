@@ -28,17 +28,18 @@
 |---|---|---|
 | 官方 Diffusers/SGLang/vLLM-Omni | 官方支持现代 GPU；需要 BF16/新注意力后端 | 不能作为 V100 首选 |
 | `dg1kjd` ComfyUI Ulysses | 8×V100-SXM2-32GB；每卡完整模型副本 | 4×16GB 需大量卸载，吞吐和显存风险高 |
-| `rwashy/H3-V100` | 1/2×16GB，INT8 ConvRot/缩放 FP8 | 可作 ComfyUI 低显存基线，但不是真正 TP4 |
+| `rwashy/H3-V100` | 1/2×16GB，INT8 ConvRot/缩放 FP8 | 可作 ComfyUI 低显存基线，但不是真正 TP4；其预编译 CUDA 算子不能默认覆盖 SM70 |
 | `Amduraznak` FP16 fix | V100 原生 FP16 数值安全 | 是精度修复，不解决模型容量 |
 | `LightX2V-V100` TP4 | 4×V100 PCIe-32GB，TP4 + 独立 VAE | 最接近本机目标；4×16GB 需要量化/卸载实测 |
+| Abiray pruned GGUF | Q3/Q4 单文件约 8.9/11.6GB，ComfyUI-GGUF 生态 | 可能适合低显存，但未找到 H3 扩散 TP4 实现；GGUF CUDA kernel 和质量必须实测 |
 
 ## 选定路线
 
 本项目优先复用 LightX2V 的真实 TP4 设计，并用 V100 FP16 安全岛替代 BF16 Tensor Core 路径：
 
 1. 只加载一个任务分区，优先 FL2VA。
-2. DiT 使用 pruned INT8 ConvRot 或经过验证的 V100 FP16 分片；不要把 FP8 当成 V100 原生计算格式。
-3. 文本编码器使用可在 Volta 上运行的 INT8/CPU 分片方案；`nvfp4` 仅作为存储格式，不能假定 V100 能原生计算。
+2. DiT 首选 AdaLN-pruned FP16 + 原生 PyTorch SDPA；INT8/GGUF 只在确认 SM70 kernel 后作为压缩存储。不要把 FP8 当成 V100 原生计算格式。
+3. 文本编码器使用预计算 conditioning、CPU 或可在 Volta 上运行的 FP16/INT8 分片方案；`nvfp4` 仅作为存储格式，不能假定 V100 能原生计算。
 4. TP4 组内每张卡持有真实权重分片，避免四份完整 DiT 副本。
 5. VAE 从 TP4 阶段拆出，使用单卡或时间块并行解码，释放 DiT 显存后再解码。
 6. 先做单请求稳定性，再做排队并发；同一 TP4 组不做盲目多进程复制。
@@ -47,12 +48,13 @@
 
 社区测量的代表性文件大小（十进制 GB，实际实现会因版本和索引变化）：
 
-- pruned INT8 DiT：约 20.97GB。
+- AdaLN-pruned FP16 DiT：约 37.46GiB（社区文件统计；TP4 理论约 9.4GiB/卡，未计激活）。
+- pruned INT8 ConvRot DiT：约 19.53GiB（Comfy-Org 文件统计；SM70 CUDA kernel 尚未验证）。
 - INT8 ConvRot 文本编码器：约 27.14GB。
 - BF16 文本编码器：约 51.51GB。
 - 官方视频/音频 VAE：约 11.0GB；部分社区量化/裁剪工作流约 5.8GB，不能默认套用。
 
-这些数字是磁盘/主机权重上界，不等于运行时显存。对本机 32GiB RAM 来说，INT8 DiT + INT8 文本编码器 + 官方 VAE 若同时常驻会超限；需要分阶段释放、磁盘映射或分片，并且 swap 不能作为性能方案。任何“4×16GB 已经稳定支持高分辨率”的结论都必须附带本机日志和峰值数据。
+这些数字是磁盘/主机权重上界，不等于运行时显存。对本机 32GiB RAM 来说，DiT、文本编码器和官方 VAE 若同时常驻会超限；需要预计算 conditioning、分阶段释放、磁盘映射或分片，并且 swap 不能作为性能方案。任何“4×16GB 已经稳定支持高分辨率”的结论都必须附带本机日志和峰值数据。
 
 ## 性能调优顺序
 
@@ -75,3 +77,4 @@
 - V100 低显存优化：<https://github.com/rwashy/H3-V100>
 - V100 FP16 数值修复：<https://github.com/Amduraznak/minimax-h3-fp16-fix>
 - 16GB 内存估算和量化文件实测：<https://github.com/Tomiigo/minimax-h3-16gb>
+- pruned GGUF 候选：<https://huggingface.co/Abiray/MiniMax-H3-Pruned-GGUF>

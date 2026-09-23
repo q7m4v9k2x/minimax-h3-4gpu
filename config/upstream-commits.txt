@@ -1,0 +1,6 @@
+# Read-only references used when this repository was initialized.
+# Re-check compatibility before upgrading any dependency.
+LightX2V-V100 23e83d915fea6c1f237af92ad407abde8f9fba73
+H3-V100 4b16da4e631e11b3d9f448d0af66f13570bde854
+v100-sxm2-minimax-h3 8dbee9c5db5da31c3d41274053492103f670fd43
+MiniMax-H3 42ed227ee7df40d41602854ae760620d6eb651fe
