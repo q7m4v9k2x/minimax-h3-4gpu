@@ -52,7 +52,7 @@ bash scripts/launch_env.sh
 1. `preflight.py`：确认 4 张 V100 的 P2P、NVLink、驱动和 PyTorch CUDA。
 2. `estimate_memory.py`：比较 BF16、INT8 DiT、INT8 文本编码器和 VAE 的主机内存上界。
 3. 只下载一个任务分区（优先 FL2VA），避免同时保存 FL2VA 和 Ref2VA 两份权重。
-4. 先用 LightX2V 的 TP4/DiT-only 入口跑 5 秒、低分辨率、少步数 smoke test，再做官方 VAE 解码。
+4. 先用 LightX2V 的 TP4/DiT-only 入口跑 5 秒、低分辨率、少步数 smoke test，再用阶段遥测补丁测 VAE 和输出尾段。
 5. 固定 seed，记录每卡峰值显存、NVLink/P2P 带宽、功耗、时延和输出是否 finite；每次只改一个变量。
 6. 只有单请求稳定后，才测试并发。TP4 一次生成会占用 4 张卡；并发请求应排队，不能把同一 TP 组当成四个独立 worker。
 
@@ -60,7 +60,7 @@ bash scripts/launch_env.sh
 
 2026-09-23 在目标工作站完成了真实 TP4 DiT-only gate：FP16 权重分片加载约 85.7 秒，480×864、124 帧、20 次评估用时约 124.16 秒（约 6.18 秒/步），每卡峰值约 12.48 GiB allocated（13.40 GB），latent 输出为 finite。该结果证明 4×V100-SXM2-16GB 可以共同运行这条分片路径；conditioning 使用的是随机合成夹具，不能作为真实画质或生产吞吐承诺。复现命令和 `--transformer-path` 要求见 [实机运行手册](docs/runbook.md)，硬件细节见 [门禁记录](docs/hardware-2026-09-23.md)。
 
-2026-09-24 又完成了一个显式实验开关 `h3_ff_chunk_rows=4096`：它将 H3 的 SwiGLU 前馈按序列行分块，在相同 480×864 门禁上把峰值 allocated 降到约 12.22 GiB（13.12 GB），并使 640×1152、124 帧、20 步通过（峰值约 13.99 GiB / 14.70 GiB，约 15.02 / 15.78 GB，约 289 秒）。未分块的 640×1152 路径会 OOM；CPU block offload 会耗尽约 32 GiB 主机内存。分块会改变 GEMM 舍入顺序，latent 不保证与未分块逐位一致，因此配置仍标为实验用途，完整数据和回归边界见 [分块前馈实验记录](docs/chunked-ff-2026-09-24.md)。
+2026-09-24 又完成了一个显式实验开关 `h3_ff_chunk_rows`：它将 H3 的 SwiGLU 前馈按序列行分块，在相同 480×864 门禁上把峰值 allocated 降到约 12.22 GiB（13.12 GB）；640×1152、124 帧、20 步使用 `4096` 行约 289 秒，调到 `8192` 行后约 288.30 秒且峰值不变。未分块的 640×1152 路径会 OOM；CPU block offload 会耗尽约 32 GiB 主机内存。分块会改变 GEMM 舍入顺序，latent 不保证与未分块逐位一致，因此配置仍标为实验用途，完整数据和回归边界见 [分块前馈实验记录](docs/chunked-ff-2026-09-24.md)。
 
 ## 目录
 
@@ -73,6 +73,7 @@ bash scripts/launch_env.sh
 | `scripts/install_comfy_plugins.sh` | 安装已核对的 V100 ComfyUI 组件 |
 | `scripts/launch_env.sh` | 输出安全的 4 卡启动环境 |
 | `scripts/benchmark_gpu.sh` | 记录生成期间 GPU 利用率、时钟、功耗和显存 |
+| `scripts/analyze_h3_report.py` | 汇总 conditioning、prepare、DiT、VAE/输出缺口和瓶颈 |
 | `scripts/check_weights.py` | 检查本地权重目录，避免漏下/混用分区 |
 | `reports/` | 本机预检和压测结果（默认被 git 忽略） |
 

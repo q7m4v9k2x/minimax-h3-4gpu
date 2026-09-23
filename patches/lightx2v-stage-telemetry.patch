@@ -1,0 +1,63 @@
+--- a/tools/minimax_h3/run_tp4_benchmark.py
++++ b/tools/minimax_h3/run_tp4_benchmark.py
+@@ -62,7 +62,7 @@
+             "target_video_length": args.frames,
+             "target_height": args.height,
+             "target_width": args.width,
+-            "h3_dit_only": True,
++            "h3_dit_only": not args.with_vae,
+             "h3_finite_check": bool(args.block_finite_check),
+             "h3_benchmark_load_telemetry": True,
+             "h3_latent_output_path": str(args.evidence_dir / f"{args.case_id}-trial1-latents.safetensors"),
+@@ -176,6 +176,11 @@
+     parser.add_argument("--effective-config", required=True, type=Path)
+     parser.add_argument("--source-revision", default="unknown")
+     parser.add_argument("--block-finite-check", action="store_true")
++    parser.add_argument(
++        "--with-vae",
++        action="store_true",
++        help="load and time the native H3 VAEs instead of forcing the DiT-only gate",
++    )
+     args = parser.parse_args()
+ 
+     validate_t2av_geometry(args.frames, args.height, args.width)
+@@ -246,6 +251,7 @@
+     original_init_run = runner.init_run
+     original_run_segment = runner.run_segment
+     original_model_infer = runner.model.infer
++    original_run_vae_decoder = runner.run_vae_decoder
+ 
+     def timed_input_encoder():
+         result, timing = _timed_cuda_call(original_input_encoder)
+@@ -280,10 +286,16 @@
+         active["trial"]["dit_segment"] = timing
+         return result
+ 
++    def timed_run_vae_decoder(video_rows, audio_rows):
++        result, timing = _timed_cuda_call(original_run_vae_decoder, video_rows, audio_rows)
++        active["trial"]["vae_decode"] = timing
++        return result
++
+     runner.run_input_encoder = timed_input_encoder
+     runner.init_run = timed_init_run
+     runner.model.infer = timed_model_infer
+     runner.run_segment = timed_run_segment
++    runner.run_vae_decoder = timed_run_vae_decoder
+ 
+     trials = []
+     for trial_index in range(1, args.trials + 1):
+@@ -348,7 +360,12 @@
+         }
+         trial["cuda_memory"] = _cuda_memory()
+         trial["process_memory"] = _process_memory()
+-        if rank == 0:
++        if rank == 0 and args.with_vae:
++            trial["output"] = str(output_path)
++            if output_path.is_file():
++                trial["output_size_bytes"] = output_path.stat().st_size
++                trial["output_sha256"] = _sha256(output_path)
++        elif rank == 0:
+             with safe_open(output_path, framework="pt", device="cpu") as handle:
+                 trial["latent_metadata"] = dict(handle.metadata() or {})
+             trial["output_size_bytes"] = output_path.stat().st_size
+             trial["output_sha256"] = _sha256(output_path)
