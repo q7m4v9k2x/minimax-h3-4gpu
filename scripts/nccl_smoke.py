@@ -21,12 +21,14 @@ def main() -> int:
     torch.cuda.set_device(local)
     dist.init_process_group("nccl")
     n = args.megabytes * 1024 * 1024 // 2
-    x = torch.ones(n, dtype=torch.float16, device="cuda") * (rank + 1)
+    x = torch.empty(n, dtype=torch.float16, device="cuda")
     for _ in range(3):
+        x.fill_(rank + 1)
         dist.all_reduce(x)
     torch.cuda.synchronize()
     t0 = time.perf_counter()
     for _ in range(args.iters):
+        x.fill_(rank + 1)
         dist.all_reduce(x)
     torch.cuda.synchronize()
     elapsed = (time.perf_counter() - t0) / args.iters
