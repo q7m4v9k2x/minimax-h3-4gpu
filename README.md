@@ -14,7 +14,7 @@
   - [rwashy/H3-V100](https://github.com/rwashy/H3-V100)：针对 V100 的 INT8 ConvRot/缩放 FP8 和显存管理，公开验证覆盖 1/2 张 16GB 卡；四卡并行仍需本机验证。
   - [Amduraznak/minimax-h3-fp16-fix](https://github.com/Amduraznak/minimax-h3-fp16-fix)：V100 原生 FP16 数值安全修复，可作为 ComfyUI 单卡/分片路径的参考。
 - 本仓库采用的目标架构是 **LightX2V 风格的真实 TP4**：4 卡共同持有分片，文本编码器也分片或卸载，VAE 单独解码；不把“4 卡分别复制完整模型”宣称为四卡共享显存。
-- 由于工作站只有约 32GiB 主机内存，官方 BF16 权重和完整双分区服务不适合直接部署。第一阶段应使用 pruned INT8 DiT + V100 兼容的 INT8/CPU 文本编码器，先通过 5 秒、低分辨率 T2VA smoke test，再逐步增加分辨率和时长。
+- 由于工作站只有约 32GiB 主机内存，官方 BF16 权重和完整双分区服务不适合直接部署。官方 VAE 文件本身约 11GiB；第一阶段应使用 pruned INT8 DiT + V100 兼容的 INT8/CPU 文本编码器，并按阶段释放组件，先通过 5 秒、低分辨率 T2VA smoke test，再逐步增加分辨率和时长。
 
 ## 快速开始
 
@@ -73,4 +73,3 @@ bash scripts/launch_env.sh
 ## 许可和权重
 
 本仓库新增脚本采用 MIT。上游组件按各自许可证使用：`dg1kjd` 插件为 GPL-3.0，官方 MiniMax H3 使用 MiniMax H3 Community License，模型权重和派生量化文件均不随本仓库分发。商业部署前必须自行阅读并接受对应许可证。
-

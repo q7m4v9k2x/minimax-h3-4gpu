@@ -20,7 +20,7 @@ WEIGHTS = {
     "dit_bf16": Weight("full BF16 DiT", 66.28e9 / GIB, "official-style storage; not a V100 Tensor Core format"),
     "te_int8": Weight("INT8 ConvRot text encoder", 27.14e9 / GIB, "community measurement"),
     "te_bf16": Weight("BF16 text encoder", 51.51e9 / GIB, "Qwen3-VL based; V100 needs FP16/CPU handling"),
-    "vae": Weight("video + audio VAE", 5.82e9 / GIB, "approximate shared components"),
+    "vae": Weight("official video + audio VAE", (10.42e9 + 0.61e9) / GIB, "official HF metadata; community quantized variants may be smaller"),
 }
 
 
@@ -58,4 +58,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

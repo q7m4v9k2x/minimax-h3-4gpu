@@ -92,14 +92,16 @@ def main() -> int:
     rows = report.get("nvidia_smi", [])
     v100 = [r for r in rows if "V100" in r.get("name", "") and float(r.get("memory.total", "0")) >= 14000]
     warnings = []
+    notes = []
     if len(v100) != 4:
         warnings.append(f"expected 4 V100 >=14,000 MiB, found {len(v100)}")
     if any(r.get("compute_cap") not in ("7.0", "7.0 ") for r in v100):
         warnings.append("one or more selected GPUs are not SM70")
     if "K620" in " ".join(r.get("name", "") for r in rows):
-        warnings.append("Quadro K620 detected: keep it out of CUDA_VISIBLE_DEVICES")
+        notes.append("Quadro K620 detected: keep it out of CUDA_VISIBLE_DEVICES")
     report["selected_v100"] = v100
     report["warnings"] = warnings
+    report["notes"] = notes
     print(json.dumps(report, ensure_ascii=False, indent=2))
     if args.json:
         args.json.parent.mkdir(parents=True, exist_ok=True)
@@ -109,4 +111,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
