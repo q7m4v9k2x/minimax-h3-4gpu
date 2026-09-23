@@ -75,7 +75,18 @@ bash scripts/launch_env.sh
 | `scripts/benchmark_gpu.sh` | 记录生成期间 GPU 利用率、时钟、功耗和显存 |
 | `scripts/analyze_h3_report.py` | 汇总 conditioning、prepare、DiT、VAE/输出缺口和瓶颈 |
 | `scripts/check_weights.py` | 检查本地权重目录，避免漏下/混用分区 |
+| `webui/` | 部署到 Oracle 140 的统一 AI 工作台：自动探测 Qwen 生图、MiniMax H3 和 LLM 后端 |
 | `reports/` | 本机预检和压测结果（默认被 git 忽略） |
+
+## Oracle 140 工作台
+
+`webui/` 是一个无外部依赖的静态入口，部署在 Oracle 140 的 HTTPS 根路径。它每 10 秒检查三个真实后端：
+
+- Qwen Image 2.1：工作站 ComfyUI 网关，入口 `/qwen-image-ui/`；
+- MiniMax H3：预留的 TP4 视频网关，入口 `/minimax-h3/`；
+- LLM：工作站当前实际启用的 vLLM 稳定入口，入口 `/llm/`。
+
+H3 页面只有在网关和 VAE 解码都返回健康状态时才允许提交任务。当前实机已经通过 DiT-only latent gate，但尚未部署视频/音频 VAE，因此页面会显示未就绪，不会把 latent 当作视频成品。
 
 ## 许可和权重
 

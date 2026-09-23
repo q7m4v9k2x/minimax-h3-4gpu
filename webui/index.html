@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>YMZX AI 工作台</title>
+  <style>
+    :root{color-scheme:dark;--bg:#08111c;--panel:#101d2b;--panel2:#142638;--line:#243b50;--text:#e7f0f8;--muted:#8da4b8;--ok:#4de1a4;--warn:#ffd166;--bad:#ff7d8e;--blue:#6eb6ff}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(1000px 600px at 10% -10%,#173a55 0%,transparent 60%),var(--bg);color:var(--text);font:15px/1.6 system-ui,-apple-system,"Microsoft YaHei",sans-serif}
+    .wrap{width:min(1120px,calc(100% - 36px));margin:auto}.top{padding:54px 0 32px;display:flex;align-items:flex-end;justify-content:space-between;gap:20px}.eyebrow{color:var(--blue);font:12px/1.2 ui-monospace,Consolas,monospace;letter-spacing:3px}.top h1{font-size:38px;line-height:1.1;font-weight:650;margin:10px 0 8px}.top p{color:var(--muted);margin:0}.refresh{color:var(--muted);font-size:12px;text-align:right}.refresh strong{color:var(--text);font-weight:500}
+    .notice{border:1px solid var(--line);background:#0d1a28c7;border-radius:16px;padding:16px 18px;margin-bottom:24px;display:flex;gap:12px;align-items:flex-start}.notice b{color:var(--blue)}.notice p{margin:0;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{border:1px solid var(--line);background:linear-gradient(150deg,#132437,#0e1a27);border-radius:20px;padding:22px;display:flex;flex-direction:column;min-height:276px;box-shadow:0 16px 40px #0003}.card.offline{opacity:.68}.card-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}.icon{width:44px;height:44px;border-radius:14px;background:#1a3550;display:grid;place-items:center;font-size:22px}.status{font-size:12px;border-radius:999px;padding:4px 9px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}.status.ok{color:var(--ok);border-color:#247957;background:#123829}.status.warn{color:var(--warn);border-color:#80631e;background:#362b0d}.status.bad{color:var(--bad);border-color:#743041;background:#351521}.card h2{font-size:20px;margin:18px 0 5px}.card .desc{color:var(--muted);margin:0;min-height:50px}.meta{color:#718a9f;font:12px/1.5 ui-monospace,Consolas,monospace;margin-top:13px;min-height:38px}.actions{margin-top:auto;display:flex;gap:9px;align-items:center}.button{appearance:none;border:1px solid #31597a;background:#173956;color:#eaf4ff;border-radius:10px;padding:9px 13px;text-decoration:none;font-weight:600;cursor:pointer}.button:hover{background:#1f4b70}.button.disabled{cursor:not-allowed;color:#70859a;background:#132333;border-color:#23394b}.ghost{border:0;background:transparent;color:var(--muted);padding:9px 4px;cursor:pointer}.footer{padding:38px 0 55px;color:#668096;font-size:12px;display:flex;justify-content:space-between;gap:20px}.mono{font-family:ui-monospace,Consolas,monospace}.pulse{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;background:var(--muted)}.pulse.ok{background:var(--ok);box-shadow:0 0 12px var(--ok)}
+    @media(max-width:850px){.top{display:block}.refresh{text-align:left;margin-top:18px}.grid{grid-template-columns:1fr}.top h1{font-size:32px}.footer{display:block}.footer span{display:block;margin-top:8px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div><div class="eyebrow">YMZX / PRIVATE AI WORKBENCH</div><h1>AI 工作台</h1><p>根据 140 上实际在线的后端，自动显示可用入口。</p></div>
+      <div class="refresh">状态每 <strong>10 秒</strong>刷新<br><span id="last">正在检查…</span></div>
+    </header>
+    <div class="notice"><div>✦</div><p><b>自动路由已开启。</b> 生图、视频和大语言模型分别检查真实后端状态；服务关闭时入口会自动置灰，避免打开一个失效页面。访问本页需要 150 VPN。</p></div>
+    <main id="services" class="grid" aria-live="polite"></main>
+    <footer class="footer"><span>访问入口：<span class="mono">140.245.81.67</span></span><span>最后检查：<span id="stamp" class="mono">—</span></span></footer>
+  </div>
+  <script>
+    const services=[
+      {id:'image',icon:'▧',name:'Qwen Image 2.1',title:'生图工作室',desc:'中文提示词、批量生成、进度同步和历史作品。',health:'/router-health/image',href:'/qwen-image-ui/',ok:'后端在线',offline:'ComfyUI 或网关未启动',meta:'/qwen-image-ui/'},
+      {id:'h3',icon:'◈',name:'MiniMax H3',title:'生视频实验室',desc:'4×V100 TP4 视频生成入口。需要 H3 网关和视频 VAE 同时在线。',health:'/router-health/h3',href:'/minimax-h3/',ok:'视频后端在线',offline:'当前未就绪：尚无 VAE 解码服务',meta:'/minimax-h3/'},
+      {id:'llm',icon:'✦',name:'LLM',title:'大语言模型',desc:'连接当前实际启用的 vLLM 后端，模型切换由工作站自动路由。',health:'/router-health/llm',href:'/llm/',ok:'LLM 在线',offline:'当前没有可用 LLM 后端',meta:'/llm/'},
+    ];
+    const state={};
+    function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+    async function probe(s){
+      const ctl=new AbortController();const timer=setTimeout(()=>ctl.abort(),3500);
+      try{const r=await fetch(s.health,{cache:'no-store',signal:ctl.signal});let body='';try{body=await r.text()}catch{};return {online:r.ok,detail:r.ok?'HTTP '+r.status:'HTTP '+r.status+(body?': '+body.slice(0,80):'')}}
+      catch(e){return {online:false,detail:e.name==='AbortError'?'超时':'连接失败'}}finally{clearTimeout(timer)}
+    }
+    function render(){
+      const root=document.getElementById('services');root.innerHTML='';
+      for(const s of services){const x=state[s.id]||{online:false,checking:true};const card=document.createElement('article');card.className='card '+(x.online?'':'offline');const status=x.checking?'检查中…':x.online?s.ok:s.offline;const cls=x.checking?'':x.online?'ok':'bad';card.innerHTML=`<div class="card-head"><div class="icon">${s.icon}</div><span class="status ${cls}"><span class="pulse ${x.online?'ok':''}"></span>${escapeHtml(status)}</span></div><h2>${escapeHtml(s.title)}</h2><p class="desc">${escapeHtml(s.desc)}</p><div class="meta">${escapeHtml(x.detail||s.meta)}</div><div class="actions">${x.online?`<a class="button" href="${s.href}">进入${escapeHtml(s.title)} →</a>`:`<span class="button disabled">等待服务</span>`}<button class="ghost" data-id="${s.id}">重新检查</button></div>`;root.appendChild(card)}
+      root.querySelectorAll('.ghost').forEach(b=>b.onclick=async()=>{const s=services.find(x=>x.id===b.dataset.id);state[s.id]={checking:true};render();state[s.id]=await probe(s);render();});
+      const online=services.filter(s=>state[s.id]?.online);document.getElementById('last').textContent=online.length===1?'当前仅 '+online[0].title+' 在线':online.length?online.length+' 个服务在线':'暂无服务在线';
+      document.getElementById('stamp').textContent=new Date().toLocaleString('zh-CN',{hour12:false});
+    }
+    async function refresh(){render();await Promise.all(services.map(async s=>{state[s.id]=await probe(s)}));render()}
+    refresh();setInterval(refresh,10000);
+  </script>
+</body>
+</html>
