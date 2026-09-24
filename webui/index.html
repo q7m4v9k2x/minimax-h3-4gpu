@@ -26,7 +26,7 @@
   <script>
     const services=[
       {id:'image',icon:'▧',name:'Qwen Image 2.1',title:'生图工作室',desc:'中文提示词、批量生成、进度同步和历史作品。',health:'/router-health/image',href:'/qwen-image-ui/',ok:'后端在线',offline:'ComfyUI 或网关未启动',meta:'/qwen-image-ui/'},
-      {id:'h3',icon:'◈',name:'MiniMax H3',title:'生视频实验室',desc:'4×V100 TP4 视频生成入口。需要 H3 网关和视频 VAE 同时在线。',health:'/router-health/h3',href:'/minimax-h3/',ok:'视频后端在线',offline:'当前未就绪：尚无 VAE 解码服务',meta:'/minimax-h3/'},
+      {id:'h3',icon:'◈',name:'MiniMax H3',title:'生视频实验室',desc:'4×V100 TP4 视频生成入口，真实进度、任务历史和 API 同步。',health:'/router-health/h3',href:'/minimax-h3/',ok:'视频后端在线',offline:'H3 网关暂未就绪',meta:'/minimax-h3/'},
       {id:'llm',icon:'✦',name:'LLM',title:'大语言模型',desc:'连接当前实际启用的 vLLM 后端，模型切换由工作站自动路由。',health:'/router-health/llm',href:'/llm/',ok:'LLM 在线',offline:'当前没有可用 LLM 后端',meta:'/llm/'},
     ];
     const state={};
