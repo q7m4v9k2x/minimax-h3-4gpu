@@ -107,7 +107,7 @@ def join_segments(segment_media: list[dict], output_dir: Path, *, duration: int 
         # format; RGB archival output uses libx264rgb. Audio is AAC re-encoded.
         command += ['-filter_complex', ';'.join(filters), '-map', '[v]', '-map', '[a]',
                     '-c:v', 'libx264rgb' if kind == 'lossless' else 'libx264',
-                    '-crf', '0', '-preset', 'fast', '-pix_fmt', 'rgb24' if kind == 'lossless' else source_pix_fmt,
+                    '-crf', '0', '-preset', 'fast', '-pix_fmt', 'rgb24' if kind == 'lossless' else 'yuv420p',
                     '-r', '24', '-frames:v', '360', '-t', '15', '-c:a', 'aac', '-b:a', '320k',
                     '-movflags', '+faststart', str(target)]
         if progress_cb:

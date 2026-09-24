@@ -145,7 +145,11 @@ def encode_video(
     output.parent.mkdir(parents=True, exist_ok=True)
     ffmpeg = ffmpeg_path()
     vcodec = "libx264rgb" if lossless else "libx264"
-    pix_out = "rgb24" if lossless else "yuv444p"
+    # Keep the preview broadly playable on Windows/macOS/mobile players.
+    # The VAE produces RGB and yuv444p preserves more chroma, but many
+    # hardware decoders reject H.264 High 4:4:4 Predictive.  The optional
+    # lossless archive remains RGB; the normal preview is standards-friendly.
+    pix_out = "rgb24" if lossless else "yuv420p"
     quality = ["-crf", "0"] if lossless else ["-crf", str(crf)]
     cmd = [
         ffmpeg,
@@ -176,6 +180,10 @@ def encode_video(
         "medium" if not lossless else "slow",
         "-pix_fmt",
         pix_out,
+        "-profile:v",
+        "high" if not lossless else "high444",
+        "-level:v",
+        "4.1",
         "-c:a",
         "aac",
         "-b:a",

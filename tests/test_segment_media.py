@@ -149,6 +149,7 @@ class SegmentMediaTests(unittest.TestCase):
         audio = next(stream for stream in info["streams"] if stream["codec_type"] == "audio")
         self.assertEqual(int(video["nb_read_frames"]), 360)
         self.assertEqual(video["avg_frame_rate"], "24/1")
+        self.assertEqual(video["pix_fmt"], "yuv420p")
         self.assertAlmostEqual(float(video["duration"]), 15.0, places=2)
         self.assertAlmostEqual(float(audio["duration"]), 15.0, delta=0.08)
         self.assertTrue(progress)
