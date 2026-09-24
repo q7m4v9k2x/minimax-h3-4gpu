@@ -39,7 +39,9 @@ PyTorch cu130 wheel 不包含 SM70，生产 unit 显式使用
 任务请求示例：
 
 ```json
-{"prompt":"海边日落，一只狗奔跑","width":480,"height":864,"frames":124,"steps":20,"seed":-1}
+{"prompt":"海边日落，一只狗奔跑","width":480,"height":864,"frames":124,"steps":20,"seed":-1,"duration":5,"segments":1}
 ```
+
+`duration` 目前支持 `5` 或 `15` 秒。15 秒必须使用 `segments: 3`：后端生成三个独立的 124 帧片段后裁剪拼接到 360 帧/15.0 秒，不能把 `frames` 改成 360 或 362。片段之间可能出现镜头跳切；同一请求仍只允许一个 TP4 worker 占用四张 V100。
 
 `h3.html` 将任务 id 保存在浏览器 `localStorage`，打开或刷新页面时先查询任务，再订阅 SSE；断线时自动回退到查询。结果文件仅从任务目录内校验过的流水线输出提供，避免路径穿越。

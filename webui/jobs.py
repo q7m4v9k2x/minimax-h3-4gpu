@@ -12,6 +12,10 @@ import signal
 import subprocess
 import threading
 import time
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+from video_request import normalize_request
 
 TERMINAL = {'completed', 'failed', 'cancelled', 'interrupted'}
 STAGES = {'conditioning', 'loading', 'sampling', 'decode', 'encode', 'starting', 'queued'}
@@ -28,29 +32,7 @@ def save_json(path: Path, data: dict) -> None:
 
 
 def validate_request(data: object) -> dict:
-    if not isinstance(data, dict):
-        raise ValueError('请求必须是 JSON 对象')
-    prompt = data.get('prompt')
-    if not isinstance(prompt, str) or not prompt.strip() or len(prompt) > 8000:
-        raise ValueError('提示词长度须为 1 至 8000 个字符')
-    values = {'width': 864, 'height': 480, 'frames': 124, 'steps': 30, 'seed': -1}
-    for name, default in values.items():
-        value = data.get(name, default)
-        if isinstance(value, bool) or not isinstance(value, int):
-            raise ValueError(f'{name} 必须为整数')
-        values[name] = value
-    if (values['width'], values['height']) not in {(864, 480), (480, 864), (1152, 640), (640, 1152)}:
-        raise ValueError('当前支持 864×480、480×864、1152×640、640×1152')
-    if values['frames'] != 124 or values['steps'] not in {20, 30}:
-        raise ValueError('当前帧数固定 124，采样评估次数为 20 或 30')
-    if not -1 <= values['seed'] <= 2**32 - 1:
-        raise ValueError('seed 超出范围')
-    if values['seed'] == -1:
-        values['seed'] = secrets.randbits(32)
-    lossless = data.get('lossless', False)
-    if not isinstance(lossless, bool):
-        raise ValueError('lossless 必须为布尔值')
-    return {'prompt': prompt.strip(), **values, 'fps': 24, 'lossless': lossless}
+    return normalize_request(data)
 
 
 class Jobs:
@@ -107,7 +89,7 @@ class Jobs:
                 if not self.args.verified:
                     reasons.append('尚未完成真实提示词端到端验收')
                 self.health_cache = {'ready': not reasons, 'reasons': reasons, 'model': 'minimax-h3',
-                                     'fps': 24, 'frames': 124, 'max_queued': self.args.queue_size}
+                                     'fps': 24, 'frames': 124, 'durations': [5, 15], 'long_video_mode': 'independent_segments', 'max_queued': self.args.queue_size}
                 self.health_time = time.monotonic()
             value = copy.deepcopy(self.health_cache)
         with self.lock:
@@ -188,9 +170,16 @@ class Jobs:
             old_stage = record['progress'].get('stage')
             record['progress'] = {'stage': event['stage'], 'current': current, 'total': total,
                                   'unit': str(event.get('unit', ''))[:40],
-                                  'detail': str(event.get('detail', ''))[:300],
+                                  'detail': str(event.get('message', event.get('detail', '')))[:300],
                                   'stage_started': (record['progress'].get('stage_started', time.time())
                                                     if old_stage == event['stage'] else time.time())}
+            if isinstance(event.get('overall_current'), (int, float)) and isinstance(event.get('overall_total'), (int, float)):
+                if 0 <= event['overall_current'] <= 10**9 and 0 < event['overall_total'] <= 10**9:
+                    record['progress']['overall_current'] = event['overall_current']
+                    record['progress']['overall_total'] = event['overall_total']
+            if isinstance(event.get('segment'), int) and isinstance(event.get('segments'), int):
+                record['progress']['segment'] = event['segment']
+                record['progress']['segments'] = event['segments']
             self._persist(record)
 
     def _result(self, job_id):
@@ -255,8 +244,14 @@ class Jobs:
                     raise RuntimeError(f'生成程序退出（代码 {code}），请检查工作站任务日志')
                 output = self._result(job_id)
                 with self.lock:
+                    request = record.get('request', {})
+                    segments = int(request.get('segments', 1))
+                    overall_total = segments * 5 + (1 if segments > 1 else 0)
                     record.update(status='completed', data=output, finished=time.time(),
-                                  progress={'stage': 'encode', 'current': 1, 'total': 1})
+                                  progress={'stage': 'encode', 'current': 1, 'total': 1,
+                                            'overall_current': overall_total,
+                                            'overall_total': overall_total,
+                                            'segment': segments, 'segments': segments})
                     self._persist(record)
             except Exception as error:
                 with self.lock:

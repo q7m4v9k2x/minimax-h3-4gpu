@@ -22,6 +22,7 @@
 | WebUI/API | 已部署并通过 | 工作站 `8200` 单 worker、持久化队列、真实进度；公网 POST→采样→VAE→MP4 返回 202/完成和下载 URL |
 | Oracle HTTPS 就绪 | 已通过 | `/router-health/h3`、`/h3-api/health` 返回 200；140 nginx ACL 与既有反向隧道保持不变 |
 | 桌面交付 | 已通过 | `C:\Users\Administrator\Desktop\minimax-h3-real-20260924-final2.mp4` 与 `minimax-h3-api-518dda3d36894eee7bdd4c0e.mp4`，均已 ffprobe |
+| 15 秒分段拼接 | 本机合成媒体门禁通过；远端 GPU 待验收 | 三段 124 帧 → FFmpeg 360 帧/15.0 秒；段间可能跳切，见 `scripts/segment_media.py` |
 
 `reports/stage-summary-final.json` 明确标记历史数据 `has_vae_stage=false`、`has_output_stage=false`。其中 `step_count=80` 是四个 rank 的步骤记录汇总，模型实际评估次数仍是 20，不是 80。
 
@@ -82,7 +83,7 @@ flowchart TD
 ## 后续工作
 
 1. 保持 `minimax-h3.service` 运行并观察队列、失败重试和重启恢复；当前单 worker 是安全并发上限。
-2. 对高分辨率 640×1152 和 30 步做端到端质量/内存回归；历史仅有 DiT-only 证据，不能直接宣称 VAE 成品通过。
+2. 对高分辨率 640×1152、30 步和 15 秒分段模式做端到端质量/内存回归；历史仅有部分 DiT-only 证据，不能直接宣称未实测档位的 VAE 成品通过。
 3. 若需提速，优先研究常驻 TP4 模型和文本 conditioning 缓存；每次改动都要重新记录四卡峰值、端到端耗时和媒体可解码性。
 4. 补充浏览器刷新中的 SSE/轮询体验测试，以及 Range 下载和历史结果展示；不要把前端动画当作模型进度。
 
@@ -106,7 +107,7 @@ curl -fsS http://127.0.0.1:8200/health
 - 浏览器持久化 job id，再通过查询和 SSE 恢复显示；服务端 `job.json` 才是任务状态来源。
 - 本轮公网 API 任务已在服务重启后再次查询到 `completed`，证明历史任务不会因网关进程重启丢失；SSE 完成事件和 Range `206` 文件下载也已实测。
 - SSE 空闲心跳约每秒一次。真实采样百分比只能随后端完成的 step 更新；每步 6–15 秒时不能伪造每秒完成一个 step。每秒刷新用时/连接状态与真实模型进度应区分。
-- 参数校验当前允许横竖两个尺寸档、124 帧、20/30 次评估；历史实测只覆盖表中横向几何和 20 次评估。API 可接收不等于该档位已通过质量验收。
+- 参数校验当前允许横竖两个尺寸档、每段 124 帧、20/30 次评估，以及 `duration=5/15`（15 秒固定三段）；历史真实端到端只覆盖横向 5 秒和 20 次评估。API 可接收不等于该档位已通过质量验收。
 - `--check` 主要检查文件；缺依赖、GPU 不可用、NCCL 错误和媒体失败仍可能发生。健康检查需结合真实验收和 worker 状态，不应修改为永远返回 ready。
 - `service.py`/`jobs.py` 的单 worker 持续运行，但当前 `generate_video.py` 每请求启动新的 TP4 子进程；“TP4 模型常驻复用”仍是优化方向，尚未实现。
 

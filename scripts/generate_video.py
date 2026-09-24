@@ -18,7 +18,10 @@ import shutil
 import subprocess
 import sys
 import time
-from typing import Any, Iterable
+from typing import Any
+
+from video_request import normalize_request
+from segment_media import join_segments, verify_media
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -41,6 +44,8 @@ HIGH_CONFIG = ROOT / "config" / "lightx2v-v100-tp4-16gb-chunked8192.experimental
 EXPORTER = ROOT / "scripts" / "export_h3_conditioning.py"
 DECODER = ROOT / "scripts" / "decode_h3_comfy.py"
 MIN_TEXT_BYTES = 1_000_000_000
+SEGMENT_FRAMES = 124
+SEGMENT_SECONDS = SEGMENT_FRAMES / 24
 
 
 def safetensors_expected_bytes(path: Path) -> int | None:
@@ -108,7 +113,8 @@ def check_resources() -> dict[str, Any]:
 
 def run_stream(command: list[str], *, cwd: Path | None = None, env: dict[str, str] | None = None,
                stage: str = "starting", progress_re: re.Pattern[str] | None = None,
-               total_default: int = 1) -> None:
+               total_default: int = 1,
+               progress_cb: Any | None = None) -> None:
     merged = os.environ.copy()
     merged.update(env or {})
     merged.setdefault("PYTHONUNBUFFERED", "1")
@@ -125,7 +131,10 @@ def run_stream(command: list[str], *, cwd: Path | None = None, env: dict[str, st
             current, total = int(match.group(1)), int(match.group(2))
             marker = (current, total)
             if marker != last:
-                emit(stage, current, total, line.strip())
+                if progress_cb is None:
+                    emit(stage, current, total, line.strip())
+                else:
+                    progress_cb(stage, current, total, line.strip())
                 last = marker
     code = process.wait()
     if code:
@@ -144,62 +153,35 @@ def write_config(path: Path, steps: int, high: bool) -> Path:
 
 
 def parse_request(path: Path) -> dict[str, Any]:
-    value = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(value, dict):
-        raise ValueError("请求必须是 JSON 对象")
-    prompt = value.get("prompt")
-    width, height = int(value.get("width", 864)), int(value.get("height", 480))
-    frames, steps = int(value.get("frames", 124)), int(value.get("steps", 20))
-    if not isinstance(prompt, str) or not prompt.strip():
-        raise ValueError("prompt 不能为空")
-    if (width, height) not in {(864, 480), (480, 864), (1152, 640), (640, 1152)}:
-        raise ValueError("不支持的 H3 几何尺寸")
-    if frames != 124 or steps not in {20, 30}:
-        raise ValueError("当前只验收 124 帧和 20/30 步")
-    seed = int(value.get("seed", 0))
-    return {"prompt": prompt.strip(), "width": width, "height": height, "frames": frames,
-            "steps": steps, "seed": seed, "fps": 24, "lossless": bool(value.get("lossless", False))}
+    return normalize_request(json.loads(path.read_text(encoding="utf-8")))
 
 
-def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--request-json", type=Path)
-    parser.add_argument("--output-dir", type=Path)
-    parser.add_argument("--check", action="store_true", help="只检查权重和脚本，不启动 GPU")
-    args = parser.parse_args(argv)
-    if args.check:
-        print(json.dumps(check_resources(), ensure_ascii=False))
-        return 0
-    if not args.request_json or not args.output_dir:
-        parser.error("生成时需要 --request-json 和 --output-dir")
-
-    request = parse_request(args.request_json)
-    out = args.output_dir.resolve()
-    out.mkdir(parents=True, exist_ok=True)
-    resources = check_resources()
-    if not resources["ready"]:
-        raise RuntimeError("; ".join(resources["reasons"]))
+def generate_segment(request: dict[str, Any], out: Path, *,
+                     emit_event: Any, conditioning: Path | None = None) -> dict[str, Any]:
+    """Run one bounded 124-frame conditioning → TP4 → VAE segment."""
     prompt = request["prompt"]
     width, height, frames, steps = request["width"], request["height"], request["frames"], request["steps"]
     high = max(width * height, 480 * 864) > 480 * 864
+    out.mkdir(parents=True, exist_ok=True)
 
     # Conditioning is intentionally generated in a child process so the
     # encoder's memory is returned before torchrun initializes four V100s.
-    condition = out / "conditioning.safetensors"
-    emit("conditioning", 0, 1, "加载 Qwen3-VL H3 文本编码器")
-    encoder_python = str(COMFY_PYTHON if COMFY_PYTHON.is_file() else Path(sys.executable))
-    encoder_env = {"PYTHONPATH": str(COMFY_ROOT)}
-    run_stream([encoder_python, str(EXPORTER), "--prompt", prompt, "--output", str(condition),
-                "--comfy-root", str(COMFY_ROOT), "--cpu"],
-               cwd=COMFY_ROOT, env=encoder_env, stage="conditioning")
+    condition = conditioning or (out / "conditioning.safetensors")
+    if conditioning is None:
+        emit_event("conditioning", 0, 1, "加载 Qwen3-VL H3 文本编码器")
+        encoder_python = str(COMFY_PYTHON if COMFY_PYTHON.is_file() else Path(sys.executable))
+        encoder_env = {"PYTHONPATH": str(COMFY_ROOT)}
+        run_stream([encoder_python, str(EXPORTER), "--prompt", prompt, "--output", str(condition),
+                    "--comfy-root", str(COMFY_ROOT), "--cpu"],
+                   cwd=COMFY_ROOT, env=encoder_env, stage="conditioning", progress_cb=emit_event)
     if not condition.is_file() or condition.stat().st_size == 0:
         raise RuntimeError("文本编码器没有输出 conditioning bundle")
-    emit("conditioning", 1, 1, "conditioning bundle 已生成")
+    emit_event("conditioning", 1, 1, "复用本任务 conditioning" if conditioning else "conditioning bundle 已生成")
 
     config = write_config(out, steps, high)
     latent = out / "h3-latents.safetensors"
     case_id = out.name
-    emit("loading", 0, 1, "启动四卡 TP4 DiT")
+    emit_event("loading", 0, 1, "启动四卡 TP4 DiT")
     env = {
         "CUDA_DEVICE_ORDER": "PCI_BUS_ID",
         "CUDA_VISIBLE_DEVICES": "1,2,3,4",
@@ -220,18 +202,19 @@ def main(argv: list[str] | None = None) -> int:
         "--evidence-dir", str(out), "--report", str(out / "benchmark.json"),
         "--effective-config", str(out / "effective-runtime.json"),
     ], cwd=LIGHTX_ROOT, env=env, stage="sampling",
-       progress_re=re.compile(r"MiniMax-H3 step:\s*(\d+)\s*/\s*(\d+)"))
-    # The runner uses <case>-trial1-latents.safetensors as its stable output.
+       progress_re=re.compile(r"MiniMax-H3 step:\s*(\d+)\s*/\s*(\d+)"),
+       progress_cb=emit_event)
     generated = out / f"{case_id}-trial1-latents.safetensors"
     if not generated.is_file():
         raise RuntimeError("TP4 没有生成 latent 文件")
     if generated != latent:
         shutil.copy2(generated, latent)
-    emit("sampling", steps, steps, "四卡 DiT latent 已完成")
+    emit_event("sampling", steps, steps, "四卡 DiT latent 已完成")
 
-    emit("decode", 0, 4, "加载官方视频/音频 VAE")
+    emit_event("decode", 0, 4, "加载官方视频/音频 VAE")
     decoder = str(DECODER)
-    decode_env = {"PYTHONPATH": str(COMFY_ROOT) + os.pathsep + str(LIGHTX_ROOT), "LIGHTX2V_MINIMAL_IMPORT": "1"}
+    decode_env = {"PYTHONPATH": str(COMFY_ROOT) + os.pathsep + str(LIGHTX_ROOT), "LIGHTX2V_MINIMAL_IMPORT": "1",
+                  "CUDA_DEVICE_ORDER": "PCI_BUS_ID", "CUDA_VISIBLE_DEVICES": "1,2,3,4"}
     decoder_python = str(COMFY_PYTHON if COMFY_PYTHON.is_file() else Path(sys.executable))
     decode_command = [decoder_python, decoder, "--latents", str(latent), "--output-dir", str(out),
                       "--comfy-root", str(COMFY_ROOT), "--lightx-root", str(LIGHTX_ROOT),
@@ -241,18 +224,111 @@ def main(argv: list[str] | None = None) -> int:
     if request["lossless"]:
         decode_command.append("--lossless")
     run_stream(decode_command, cwd=ROOT, env=decode_env, stage="decode",
-               progress_re=re.compile(r'"stage":\s*"(?:decode|encode)".*?"current":\s*(\d+).*?"total":\s*(\d+)'))
+               progress_re=re.compile(r'"stage":\s*"(?:decode|encode)".*?"current":\s*(\d+).*?"total":\s*(\d+)'),
+               progress_cb=emit_event)
 
     media = json.loads((out / "media.json").read_text(encoding="utf-8"))
     preview = Path(media["preview"]).resolve()
     if not preview.is_file():
         raise RuntimeError("VAE/编码阶段没有生成 MP4")
+    lossless_path = Path(media["lossless"]).resolve() if media.get("lossless") else None
+    if lossless_path is not None and not lossless_path.is_file():
+        raise RuntimeError("VAE/编码阶段没有生成无损 MP4")
+    return {"preview": str(preview), "lossless": str(lossless_path) if lossless_path else None,
+            "metadata": media}
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--request-json", type=Path)
+    parser.add_argument("--output-dir", type=Path)
+    parser.add_argument("--check", action="store_true", help="只检查权重和脚本，不启动 GPU")
+    args = parser.parse_args(argv)
+    if args.check:
+        print(json.dumps(check_resources(), ensure_ascii=False))
+        return 0
+    if not args.request_json or not args.output_dir:
+        parser.error("生成时需要 --request-json 和 --output-dir")
+
+    request = parse_request(args.request_json)
+    out = args.output_dir.resolve()
+    out.mkdir(parents=True, exist_ok=True)
+    resources = check_resources()
+    if not resources["ready"]:
+        raise RuntimeError("; ".join(resources["reasons"]))
+    segment_count = request["segments"]
+    segment_media: list[dict[str, Any]] = []
+
+    overall_last = 0.0
+
+    def stage_index(stage: str) -> int:
+        return {"conditioning": 0, "loading": 1, "sampling": 2, "decode": 3, "encode": 4}.get(stage, 0)
+
+    def segment_event(segment: int, stage: str, current: int, total: int, message: str) -> None:
+        nonlocal overall_last
+        # Expose a monotonic overall progress value while retaining local
+        # stage counters for the existing WebUI/API contract.
+        local = (current / total) if total else 0.0
+        overall_total = segment_count * 5 + (1 if segment_count > 1 else 0)
+        overall_current = max(overall_last, segment * 5 + stage_index(stage) + local)
+        overall_last = overall_current
+        emit(stage, current, total, f"片段 {segment + 1}/{segment_count} · {message}",
+             overall_current=overall_current, overall_total=overall_total,
+             segment=segment + 1, segments=segment_count)
+
+    for segment in range(segment_count):
+        segment_request = dict(request)
+        segment_request["seed"] = (request["seed"] + segment) & 0xFFFFFFFF
+        segment_dir = out if segment_count == 1 else out / f"segment-{segment + 1:02d}"
+        segment_media.append(generate_segment(
+            segment_request, segment_dir,
+            conditioning=(out / "segment-01/conditioning.safetensors") if segment > 0 else None,
+            emit_event=lambda stage, current, total, message, _segment=segment:
+                segment_event(_segment, stage, current, total, message),
+        ))
+
+    if segment_count == 1:
+        media = segment_media[0]["metadata"]
+        # Keep the public metadata explicit even though the decoder reports
+        # the bounded 124-frame segment rather than a requested duration.
+        media.update({"duration": SEGMENT_SECONDS, "requested_duration": 5, "segments": 1, "segment_frames": request["frames"],
+                      "segment_duration": SEGMENT_SECONDS})
+        (out / "media.json").write_text(json.dumps(media, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        preview = Path(segment_media[0]["preview"]).resolve()
+        lossless_path = Path(segment_media[0]["lossless"]).resolve() if segment_media[0].get("lossless") else None
+    else:
+        joined = join_segments(
+            segment_media, out, duration=request["duration"], lossless=request["lossless"],
+            progress_cb=lambda stage, current, total, message: emit(
+                stage, current, total, message,
+                overall_current=segment_count * 5 + current / total,
+                overall_total=segment_count * 5 + 1, segment=segment_count, segments=segment_count),
+        )
+        preview = Path(joined["preview"]).resolve()
+        lossless_path = Path(joined["lossless"]).resolve() if joined.get("lossless") else None
+        media = {
+            "frames": int(request["duration"] * request["fps"]),
+            "fps": request["fps"], "width": request["width"], "height": request["height"],
+            "duration": request["duration"], "segments": segment_count,
+            "segment_frames": request["frames"], "segment_duration": SEGMENT_SECONDS,
+            "preview": str(preview), "lossless": str(lossless_path) if lossless_path else None,
+            "segment_media": [item["metadata"] for item in segment_media],
+            "verification": joined["verification"], "assembly": joined["assembly"],
+        }
+        (out / "media.json").write_text(json.dumps(media, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    if not preview.is_file():
+        raise RuntimeError("VAE/编码阶段没有生成 MP4")
+    if segment_count == 1:
+        media["verification"] = {"preview": verify_media(preview, frames=124)}
     # The web worker serves only files inside the job directory.
     result = {"video": preview.name, "poster": None, "lossless": None, "metadata": media}
-    if request["lossless"] and media.get("lossless"):
-        result["lossless"] = Path(media["lossless"]).resolve().name
+    if lossless_path is not None:
+        result["lossless"] = lossless_path.name
     (out / "result.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    emit("encode", 1, 1, "MP4 已写入并完成校验")
+    final_total = segment_count * 5 + (1 if segment_count > 1 else 0)
+    emit("encode", 1, 1, "MP4 已写入并完成校验", overall_current=final_total, overall_total=final_total,
+         segment=segment_count, segments=segment_count)
     emit_result(**result)
     return 0
 
