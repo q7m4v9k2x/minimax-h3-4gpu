@@ -22,7 +22,7 @@
 | WebUI/API | 已部署并通过 | 工作站 `8200` 单 worker、持久化队列、真实进度；公网 POST→采样→VAE→MP4 返回 202/完成和下载 URL |
 | Oracle HTTPS 就绪 | 已通过 | `/router-health/h3`、`/h3-api/health` 返回 200；140 nginx ACL 与既有反向隧道保持不变 |
 | 桌面交付 | 已通过 | `C:\Users\Administrator\Desktop\minimax-h3-real-20260924-final2.mp4` 与 `minimax-h3-api-518dda3d36894eee7bdd4c0e.mp4`，均已 ffprobe |
-| 15 秒分段拼接 | 本机合成媒体门禁通过；远端 GPU 待验收 | 三段 124 帧 → FFmpeg 360 帧/15.0 秒；段间可能跳切，见 `scripts/segment_media.py` |
+| 15 秒分段拼接 | 已完成一次远端真实端到端验收 | 任务 `22f6c4c0f1847484a1eb08ee`：三段 124 帧 → FFmpeg 360 帧/15.0 秒；报告见 `docs/15s-segment-e2e-2026-09-24.md`，段间可能跳切 |
 
 `reports/stage-summary-final.json` 明确标记历史数据 `has_vae_stage=false`、`has_output_stage=false`。其中 `step_count=80` 是四个 rank 的步骤记录汇总，模型实际评估次数仍是 20，不是 80。
 
