@@ -77,7 +77,7 @@ flowchart TD
 
 6. 本轮手动端到端任务：真实中文 prompt、864×480、124 帧、20 步；TP4 DiT pipeline 约 119.92 秒，VAE/编码完成后得到 `h3-preview.mp4`。公网 API 任务 ID 为 `518dda3d36894eee7bdd4c0e`，状态从 conditioning、loading、sampling、decode、encode 到 completed，返回 2,368,687 字节 MP4。
 
-本轮文档初审时，本机 `scripts/generate_video.py` 仍采用硬编码文件最小长度、文本编码的 `sys.executable` 和裸 `torchrun`，与第 3 项不一致。应先对比并回收远端修复；这个差异不能靠重新上传本机旧代码解决。
+本轮开始时本机 `scripts/generate_video.py` 仍采用硬编码文件最小长度、文本编码的 `sys.executable` 和裸 `torchrun`；该同步差异已经回收并修复，当前代码优先选择支持 SM70 的 ComfyUI `torchrun`。
 
 ## 后续工作
 
@@ -89,7 +89,7 @@ flowchart TD
 可先做不启 GPU 的资源检查；它只检查资源，不代表完成视频验收：
 
 ```bash
-/home/ymzx/h3-venv/bin/python \
+/home/ymzx/ComfyUI/venv/bin/python \
   /home/ymzx/minimax-h3-4gpu/scripts/generate_video.py --check
 ```
 
@@ -104,6 +104,7 @@ curl -fsS http://127.0.0.1:8200/health
 
 - 任务数据默认写入 `h3-jobs/<job_id>/`。服务重启会将正在运行的任务标记 `interrupted`，并恢复排队任务；这不是从中间采样步继续生成。
 - 浏览器持久化 job id，再通过查询和 SSE 恢复显示；服务端 `job.json` 才是任务状态来源。
+- 本轮公网 API 任务已在服务重启后再次查询到 `completed`，证明历史任务不会因网关进程重启丢失；SSE 完成事件和 Range `206` 文件下载也已实测。
 - SSE 空闲心跳约每秒一次。真实采样百分比只能随后端完成的 step 更新；每步 6–15 秒时不能伪造每秒完成一个 step。每秒刷新用时/连接状态与真实模型进度应区分。
 - 参数校验当前允许横竖两个尺寸档、124 帧、20/30 次评估；历史实测只覆盖表中横向几何和 20 次评估。API 可接收不等于该档位已通过质量验收。
 - `--check` 主要检查文件；缺依赖、GPU 不可用、NCCL 错误和媒体失败仍可能发生。健康检查需结合真实验收和 worker 状态，不应修改为永远返回 ready。
@@ -111,11 +112,11 @@ curl -fsS http://127.0.0.1:8200/health
 
 ## 已知文档差异
 
-- `README.md` 与 `pipeline-bottleneck-2026-09-24.md` 写着“尚无 VAE 权重”；这是之前阶段的状态，不能证明当前仍缺权重，也不能证明已解码成功。
+- 旧的研究/瓶颈段落可能保留早期“尚无 VAE”的历史措辞；当前状态以本文件、`docs/EXPERIMENTS.md` 和 `reports/remote-h3-e2e-20260924-api.json` 为准。
 - `docs/runbook.md` 的历史 benchmark 命令使用 ComfyUI `torchrun`；新 H3 环境调试应核对绝对路径，不能盲目复制旧命令。
 - `docs/research.md` 和历史报告的 cu128 属于旧环境；上轮交接的 H3 cu130 必须独立核验 SM70 支持、依赖 ABI 和真实性能。
 - 公开上游 pin 与历史 benchmark 的 `source_revision` 不一定相同；性能复现要保存实际下游 commit 和本地 patch，而不只写上游项目名。
-- 本轮初审 git 存在未提交的编排、解码、网关代码及网页修改；不要 reset 或直接覆盖。新文档没有代表这些代码已完成发布。
+- 端到端代码、网关、网页和本轮报告已提交并推送到公开仓库；同步远端时仍须保留本文件记录的 systemd 环境选择。
 
 ## 后续调优优先级
 
