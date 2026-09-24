@@ -1,0 +1,1260 @@
+{
+  "benchmark": {
+    "attention": "torch_sdpa",
+    "block_finite_check": false,
+    "dtype": "FP16",
+    "feature_caching": "NoCaching",
+    "model_evaluations": 20,
+    "rms": "torch_native",
+    "rope": "torch_real_rope",
+    "sensitive_layer_dtype": "FP32",
+    "task": "t2av",
+    "tensor_parallel": 4,
+    "trials": 1
+  },
+  "case_id": "518dda3d36894eee7bdd4c0e",
+  "fixture": {
+    "jobs": [],
+    "jobs_manifest": null,
+    "precomputed_condition_path": "/home/ymzx/minimax-h3-4gpu/h3-jobs/518dda3d36894eee7bdd4c0e/conditioning.safetensors",
+    "prompt": "\u91d1\u8272\u5915\u9633\u4e0b\uff0c\u7ea2\u72d0\u7a7f\u8fc7\u8584\u96fe\u7af9\u6797\uff0c\u7535\u5f71\u611f\u955c\u5934\uff0c\u67d4\u548c\u4f53\u79ef\u5149",
+    "reference_image": null,
+    "seed": 20260924,
+    "transformer_path": "/home/ymzx/models/minimax-h3/lightx2v-fl2v-pruned"
+  },
+  "geometry": {
+    "encoded_duration_seconds": 5.166666666666667,
+    "fps": 24,
+    "frames": 124,
+    "height": 480,
+    "nominal_duration_seconds": 5,
+    "width": 864
+  },
+  "ranks": [
+    {
+      "device": {
+        "compute_capability": [
+          7,
+          0
+        ],
+        "name": "Tesla V100-SXM2-16GB",
+        "total_memory_bytes": 16928342016
+      },
+      "load": {
+        "checkpoint_files": [
+          {
+            "elapsed_seconds": 10.12765803502407,
+            "file": "diffusion_pytorch_model-00009-of-00010.safetensors",
+            "file_size_bytes": 4381042288,
+            "finished_epoch": 1790224948.8562117,
+            "retained_tensor_bytes": 1386592256,
+            "source_tensor_bytes": 4381034496,
+            "started_epoch": 1790224938.728554,
+            "tensor_count": 69
+          },
+          {
+            "elapsed_seconds": 9.31387369002914,
+            "file": "diffusion_pytorch_model-00006-of-00010.safetensors",
+            "file_size_bytes": 4324765232,
+            "finished_epoch": 1790224958.2125952,
+            "retained_tensor_bytes": 1081272064,
+            "source_tensor_bytes": 4324758016,
+            "started_epoch": 1790224948.8987215,
+            "tensor_count": 62
+          },
+          {
+            "elapsed_seconds": 9.413779145979788,
+            "file": "diffusion_pytorch_model-00003-of-00010.safetensors",
+            "file_size_bytes": 4324765224,
+            "finished_epoch": 1790224967.6779644,
+            "retained_tensor_bytes": 1081272064,
+            "source_tensor_bytes": 4324758016,
+            "started_epoch": 1790224958.2641857,
+            "tensor_count": 62
+          },
+          {
+            "elapsed_seconds": 9.487610929005314,
+            "file": "diffusion_pytorch_model-00008-of-00010.safetensors",
+            "file_size_bytes": 4326530088,
+            "finished_epoch": 1790224977.2212815,
+            "retained_tensor_bytes": 1081729536,
+            "source_tensor_bytes": 4326521856,
+            "started_epoch": 1790224967.733671,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 9.422896937001497,
+            "file": "diffusion_pytorch_model-00002-of-00010.safetensors",
+            "file_size_bytes": 4326530096,
+            "finished_epoch": 1790224986.702113,
+            "retained_tensor_bytes": 1081729536,
+            "source_tensor_bytes": 4326521856,
+            "started_epoch": 1790224977.2792163,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 9.656175771960989,
+            "file": "diffusion_pytorch_model-00004-of-00010.safetensors",
+            "file_size_bytes": 4480670736,
+            "finished_epoch": 1790224996.4133065,
+            "retained_tensor_bytes": 1120264704,
+            "source_tensor_bytes": 4480662528,
+            "started_epoch": 1790224986.7571304,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 3.0314850009744987,
+            "file": "diffusion_pytorch_model-00010-of-00010.safetensors",
+            "file_size_bytes": 772845248,
+            "finished_epoch": 1790224999.484145,
+            "retained_tensor_bytes": 387546112,
+            "source_tensor_bytes": 772843520,
+            "started_epoch": 1790224996.4526603,
+            "tensor_count": 15
+          },
+          {
+            "elapsed_seconds": 8.80238820798695,
+            "file": "diffusion_pytorch_model-00005-of-00010.safetensors",
+            "file_size_bytes": 4326530088,
+            "finished_epoch": 1790225008.305675,
+            "retained_tensor_bytes": 1081729536,
+            "source_tensor_bytes": 4326521856,
+            "started_epoch": 1790224999.503287,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 9.72479749500053,
+            "file": "diffusion_pytorch_model-00001-of-00010.safetensors",
+            "file_size_bytes": 4481391696,
+            "finished_epoch": 1790225018.0696502,
+            "retained_tensor_bytes": 1120985632,
+            "source_tensor_bytes": 4481383456,
+            "started_epoch": 1790225008.3448527,
+            "tensor_count": 72
+          },
+          {
+            "elapsed_seconds": 9.571396215003915,
+            "file": "diffusion_pytorch_model-00007-of-00010.safetensors",
+            "file_size_bytes": 4480670728,
+            "finished_epoch": 1790225027.7036605,
+            "retained_tensor_bytes": 1120264704,
+            "source_tensor_bytes": 4480662528,
+            "started_epoch": 1790225018.132264,
+            "tensor_count": 71
+          }
+        ],
+        "component_timing": {},
+        "cuda_memory_after_load": {
+          "allocated_bytes": 10595897856,
+          "free_bytes": 5148377088,
+          "peak_allocated_bytes": 10617876992,
+          "peak_reserved_bytes": 11060379648,
+          "reserved_bytes": 11060379648,
+          "total_bytes": 16928342016
+        },
+        "elapsed_seconds": 90.0980409180047,
+        "finished_epoch": 1790225028.8089237,
+        "lora_files": [],
+        "parallel_init_seconds": 0.5143640509922989,
+        "process_memory_after_load": {
+          "vmhwm_kib": 5020068,
+          "vmrss_kib": 472840,
+          "vmsize_kib": 69629172
+        },
+        "started_epoch": 1790224938.710883
+      },
+      "local_rank": 0,
+      "rank": 0,
+      "trials": [
+        {
+          "condition_path": "/home/ymzx/minimax-h3-4gpu/h3-jobs/518dda3d36894eee7bdd4c0e/conditioning.safetensors",
+          "condition_wait": {
+            "elapsed_seconds": 0.0005914650391787291,
+            "finished_epoch": 1790225028.8107376,
+            "started_epoch": 1790225028.810146
+          },
+          "conditioning": {
+            "elapsed_seconds": 0.044918498024344444,
+            "finished_epoch": 1790225028.8722894,
+            "started_epoch": 1790225028.827372
+          },
+          "cuda_memory": {
+            "allocated_bytes": 10605466112,
+            "free_bytes": 5114822656,
+            "peak_allocated_bytes": 13394085376,
+            "peak_reserved_bytes": 14315159552,
+            "reserved_bytes": 11081351168,
+            "total_bytes": 16928342016
+          },
+          "dit_segment": {
+            "elapsed_seconds": 119.36427192902192,
+            "finished_epoch": 1790225148.3057797,
+            "started_epoch": 1790225028.941508
+          },
+          "job_id": "trial-1",
+          "latent_metadata": {
+            "audio_max": "1.53624868",
+            "audio_min": "-1.39573371",
+            "audio_shape": "(414, 32)",
+            "finite": "true",
+            "model_evaluations": "20",
+            "video_max": "3.97952318",
+            "video_min": "-5.07711554",
+            "video_shape": "(14985, 96)"
+          },
+          "model_evaluations": [
+            {
+              "elapsed_seconds": 6.351687295013107,
+              "finished_epoch": 1790225035.3002331,
+              "started_epoch": 1790225028.9485464
+            },
+            {
+              "elapsed_seconds": 5.9221107279881835,
+              "finished_epoch": 1790225041.2248175,
+              "started_epoch": 1790225035.3027067
+            },
+            {
+              "elapsed_seconds": 5.927183221967425,
+              "finished_epoch": 1790225047.1544428,
+              "started_epoch": 1790225041.2272599
+            },
+            {
+              "elapsed_seconds": 5.936302151007112,
+              "finished_epoch": 1790225053.0926976,
+              "started_epoch": 1790225047.1563957
+            },
+            {
+              "elapsed_seconds": 5.933475966972765,
+              "finished_epoch": 1790225059.0279148,
+              "started_epoch": 1790225053.094439
+            },
+            {
+              "elapsed_seconds": 5.936194444017019,
+              "finished_epoch": 1790225064.965849,
+              "started_epoch": 1790225059.0296545
+            },
+            {
+              "elapsed_seconds": 5.939970386971254,
+              "finished_epoch": 1790225070.907586,
+              "started_epoch": 1790225064.9676158
+            },
+            {
+              "elapsed_seconds": 5.938941573025659,
+              "finished_epoch": 1790225076.8481855,
+              "started_epoch": 1790225070.909244
+            },
+            {
+              "elapsed_seconds": 5.941112016967963,
+              "finished_epoch": 1790225082.7910676,
+              "started_epoch": 1790225076.8499556
+            },
+            {
+              "elapsed_seconds": 5.946061203023419,
+              "finished_epoch": 1790225088.7388606,
+              "started_epoch": 1790225082.7927995
+            },
+            {
+              "elapsed_seconds": 5.948370456986595,
+              "finished_epoch": 1790225094.6889565,
+              "started_epoch": 1790225088.740586
+            },
+            {
+              "elapsed_seconds": 5.9498475680011325,
+              "finished_epoch": 1790225100.6404982,
+              "started_epoch": 1790225094.690651
+            },
+            {
+              "elapsed_seconds": 5.948515495983884,
+              "finished_epoch": 1790225106.5907571,
+              "started_epoch": 1790225100.6422417
+            },
+            {
+              "elapsed_seconds": 5.956948830978945,
+              "finished_epoch": 1790225112.5494604,
+              "started_epoch": 1790225106.592512
+            },
+            {
+              "elapsed_seconds": 5.957665837020613,
+              "finished_epoch": 1790225118.5088918,
+              "started_epoch": 1790225112.5512261
+            },
+            {
+              "elapsed_seconds": 5.957499586977065,
+              "finished_epoch": 1790225124.468138,
+              "started_epoch": 1790225118.5106385
+            },
+            {
+              "elapsed_seconds": 5.957967173017096,
+              "finished_epoch": 1790225130.4279454,
+              "started_epoch": 1790225124.4699783
+            },
+            {
+              "elapsed_seconds": 5.956186343973968,
+              "finished_epoch": 1790225136.3858755,
+              "started_epoch": 1790225130.4296894
+            },
+            {
+              "elapsed_seconds": 5.954876791976858,
+              "finished_epoch": 1790225142.3425026,
+              "started_epoch": 1790225136.387626
+            },
+            {
+              "elapsed_seconds": 5.96095298405271,
+              "finished_epoch": 1790225148.3052204,
+              "started_epoch": 1790225142.3442674
+            }
+          ],
+          "output": "/home/ymzx/minimax-h3-4gpu/h3-jobs/518dda3d36894eee7bdd4c0e/518dda3d36894eee7bdd4c0e-trial1-latents.safetensors",
+          "output_sha256": "41c6a0251544d00ead7b9acb42972a047d7ca48c7eaae3d4b9e4bf1eab1808fb",
+          "output_size_bytes": 5807608,
+          "packed_sequence": {
+            "audio_rows": 414,
+            "condition_audio_rows": 0,
+            "condition_video_rows": 0,
+            "latent_frames": 37,
+            "latent_height": 30,
+            "latent_width": 54,
+            "target_audio_rows": 414,
+            "target_video_rows": 14985,
+            "text_rows": 19,
+            "total_rows": 15418,
+            "video_rows": 14985
+          },
+          "pipeline": {
+            "elapsed_seconds": 119.93092149496078,
+            "finished_epoch": 1790225148.7582576,
+            "started_epoch": 1790225028.8273373
+          },
+          "prepare_dit": {
+            "elapsed_seconds": 0.06914355600019917,
+            "finished_epoch": 1790225028.9414742,
+            "started_epoch": 1790225028.8723314
+          },
+          "process_memory": {
+            "vmhwm_kib": 5020068,
+            "vmrss_kib": 904524,
+            "vmsize_kib": 70800624
+          },
+          "prompt": "\u91d1\u8272\u5915\u9633\u4e0b\uff0c\u7ea2\u72d0\u7a7f\u8fc7\u8584\u96fe\u7af9\u6797\uff0c\u7535\u5f71\u611f\u955c\u5934\uff0c\u67d4\u548c\u4f53\u79ef\u5149",
+          "seed": 20260924,
+          "trial": 1
+        }
+      ]
+    },
+    {
+      "device": {
+        "compute_capability": [
+          7,
+          0
+        ],
+        "name": "Tesla V100-SXM2-16GB",
+        "total_memory_bytes": 16928342016
+      },
+      "load": {
+        "checkpoint_files": [
+          {
+            "elapsed_seconds": 10.129036886035465,
+            "file": "diffusion_pytorch_model-00009-of-00010.safetensors",
+            "file_size_bytes": 4381042288,
+            "finished_epoch": 1790224948.857592,
+            "retained_tensor_bytes": 1386592256,
+            "source_tensor_bytes": 4381034496,
+            "started_epoch": 1790224938.7285554,
+            "tensor_count": 69
+          },
+          {
+            "elapsed_seconds": 9.319699367973953,
+            "file": "diffusion_pytorch_model-00006-of-00010.safetensors",
+            "file_size_bytes": 4324765232,
+            "finished_epoch": 1790224958.2184217,
+            "retained_tensor_bytes": 1081272064,
+            "source_tensor_bytes": 4324758016,
+            "started_epoch": 1790224948.8987224,
+            "tensor_count": 62
+          },
+          {
+            "elapsed_seconds": 9.41628667502664,
+            "file": "diffusion_pytorch_model-00003-of-00010.safetensors",
+            "file_size_bytes": 4324765224,
+            "finished_epoch": 1790224967.6807466,
+            "retained_tensor_bytes": 1081272064,
+            "source_tensor_bytes": 4324758016,
+            "started_epoch": 1790224958.2644598,
+            "tensor_count": 62
+          },
+          {
+            "elapsed_seconds": 9.487261284026317,
+            "file": "diffusion_pytorch_model-00008-of-00010.safetensors",
+            "file_size_bytes": 4326530088,
+            "finished_epoch": 1790224977.2212253,
+            "retained_tensor_bytes": 1081729536,
+            "source_tensor_bytes": 4326521856,
+            "started_epoch": 1790224967.733964,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 9.423386747017503,
+            "file": "diffusion_pytorch_model-00002-of-00010.safetensors",
+            "file_size_bytes": 4326530096,
+            "finished_epoch": 1790224986.7024653,
+            "retained_tensor_bytes": 1081729536,
+            "source_tensor_bytes": 4326521856,
+            "started_epoch": 1790224977.2790787,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 9.651260779006407,
+            "file": "diffusion_pytorch_model-00004-of-00010.safetensors",
+            "file_size_bytes": 4480670736,
+            "finished_epoch": 1790224996.408461,
+            "retained_tensor_bytes": 1120264704,
+            "source_tensor_bytes": 4480662528,
+            "started_epoch": 1790224986.7572002,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 3.0314995440421626,
+            "file": "diffusion_pytorch_model-00010-of-00010.safetensors",
+            "file_size_bytes": 772845248,
+            "finished_epoch": 1790224999.484159,
+            "retained_tensor_bytes": 387546112,
+            "source_tensor_bytes": 772843520,
+            "started_epoch": 1790224996.4526596,
+            "tensor_count": 15
+          },
+          {
+            "elapsed_seconds": 8.805933690979145,
+            "file": "diffusion_pytorch_model-00005-of-00010.safetensors",
+            "file_size_bytes": 4326530088,
+            "finished_epoch": 1790225008.3057208,
+            "retained_tensor_bytes": 1081729536,
+            "source_tensor_bytes": 4326521856,
+            "started_epoch": 1790224999.4997876,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 9.728462676983327,
+            "file": "diffusion_pytorch_model-00001-of-00010.safetensors",
+            "file_size_bytes": 4481391696,
+            "finished_epoch": 1790225018.074445,
+            "retained_tensor_bytes": 1120985632,
+            "source_tensor_bytes": 4481383456,
+            "started_epoch": 1790225008.3459823,
+            "tensor_count": 72
+          },
+          {
+            "elapsed_seconds": 9.577900736010633,
+            "file": "diffusion_pytorch_model-00007-of-00010.safetensors",
+            "file_size_bytes": 4480670728,
+            "finished_epoch": 1790225027.7049413,
+            "retained_tensor_bytes": 1120264704,
+            "source_tensor_bytes": 4480662528,
+            "started_epoch": 1790225018.1270406,
+            "tensor_count": 71
+          }
+        ],
+        "component_timing": {},
+        "cuda_memory_after_load": {
+          "allocated_bytes": 10595897856,
+          "free_bytes": 5148377088,
+          "peak_allocated_bytes": 10617876992,
+          "peak_reserved_bytes": 11060379648,
+          "reserved_bytes": 11060379648,
+          "total_bytes": 16928342016
+        },
+        "elapsed_seconds": 90.07374483498279,
+        "finished_epoch": 1790225028.7845492,
+        "lora_files": [],
+        "parallel_init_seconds": 0.48825459904037416,
+        "process_memory_after_load": {
+          "vmhwm_kib": 5021232,
+          "vmrss_kib": 483104,
+          "vmsize_kib": 69596280
+        },
+        "started_epoch": 1790224938.7108045
+      },
+      "local_rank": 1,
+      "rank": 1,
+      "trials": [
+        {
+          "condition_path": "/home/ymzx/minimax-h3-4gpu/h3-jobs/518dda3d36894eee7bdd4c0e/conditioning.safetensors",
+          "condition_wait": {
+            "elapsed_seconds": 0.0010020550107583404,
+            "finished_epoch": 1790225028.7877061,
+            "started_epoch": 1790225028.7867038
+          },
+          "conditioning": {
+            "elapsed_seconds": 0.04467150697018951,
+            "finished_epoch": 1790225028.8722649,
+            "started_epoch": 1790225028.8275952
+          },
+          "cuda_memory": {
+            "allocated_bytes": 10605466112,
+            "free_bytes": 5114822656,
+            "peak_allocated_bytes": 13394085376,
+            "peak_reserved_bytes": 14315159552,
+            "reserved_bytes": 11081351168,
+            "total_bytes": 16928342016
+          },
+          "dit_segment": {
+            "elapsed_seconds": 119.3642283140216,
+            "finished_epoch": 1790225148.3057504,
+            "started_epoch": 1790225028.9415221
+          },
+          "job_id": "trial-1",
+          "model_evaluations": [
+            {
+              "elapsed_seconds": 6.351618079002947,
+              "finished_epoch": 1790225035.3001673,
+              "started_epoch": 1790225028.9485497
+            },
+            {
+              "elapsed_seconds": 5.922070501022972,
+              "finished_epoch": 1790225041.22479,
+              "started_epoch": 1790225035.3027198
+            },
+            {
+              "elapsed_seconds": 5.927047431992833,
+              "finished_epoch": 1790225047.154333,
+              "started_epoch": 1790225041.227286
+            },
+            {
+              "elapsed_seconds": 5.936273674946278,
+              "finished_epoch": 1790225053.0928113,
+              "started_epoch": 1790225047.156538
+            },
+            {
+              "elapsed_seconds": 5.933150144992396,
+              "finished_epoch": 1790225059.0277424,
+              "started_epoch": 1790225053.0945923
+            },
+            {
+              "elapsed_seconds": 5.936167137988377,
+              "finished_epoch": 1790225064.9658248,
+              "started_epoch": 1790225059.0296578
+            },
+            {
+              "elapsed_seconds": 5.939946667989716,
+              "finished_epoch": 1790225070.907574,
+              "started_epoch": 1790225064.9676275
+            },
+            {
+              "elapsed_seconds": 5.938709706009831,
+              "finished_epoch": 1790225076.848079,
+              "started_epoch": 1790225070.9093692
+            },
+            {
+              "elapsed_seconds": 5.94107887201244,
+              "finished_epoch": 1790225082.7910364,
+              "started_epoch": 1790225076.8499577
+            },
+            {
+              "elapsed_seconds": 5.94585665903287,
+              "finished_epoch": 1790225088.7386625,
+              "started_epoch": 1790225082.792806
+            },
+            {
+              "elapsed_seconds": 5.948461331019644,
+              "finished_epoch": 1790225094.689052,
+              "started_epoch": 1790225088.740591
+            },
+            {
+              "elapsed_seconds": 5.949582397006452,
+              "finished_epoch": 1790225100.6403522,
+              "started_epoch": 1790225094.69077
+            },
+            {
+              "elapsed_seconds": 5.948474924021866,
+              "finished_epoch": 1790225106.5907195,
+              "started_epoch": 1790225100.6422448
+            },
+            {
+              "elapsed_seconds": 5.957039033994079,
+              "finished_epoch": 1790225112.549553,
+              "started_epoch": 1790225106.592514
+            },
+            {
+              "elapsed_seconds": 5.95714788796613,
+              "finished_epoch": 1790225118.5084813,
+              "started_epoch": 1790225112.5513337
+            },
+            {
+              "elapsed_seconds": 5.957279664988164,
+              "finished_epoch": 1790225124.4679193,
+              "started_epoch": 1790225118.51064
+            },
+            {
+              "elapsed_seconds": 5.9581666679587215,
+              "finished_epoch": 1790225130.428145,
+              "started_epoch": 1790225124.4699783
+            },
+            {
+              "elapsed_seconds": 5.955766246013809,
+              "finished_epoch": 1790225136.3857138,
+              "started_epoch": 1790225130.4299479
+            },
+            {
+              "elapsed_seconds": 5.954560638987459,
+              "finished_epoch": 1790225142.3422034,
+              "started_epoch": 1790225136.3876429
+            },
+            {
+              "elapsed_seconds": 5.960883523977827,
+              "finished_epoch": 1790225148.3051512,
+              "started_epoch": 1790225142.3442678
+            }
+          ],
+          "output": "/home/ymzx/minimax-h3-4gpu/h3-jobs/518dda3d36894eee7bdd4c0e/518dda3d36894eee7bdd4c0e-trial1-latents.safetensors",
+          "packed_sequence": {
+            "audio_rows": 414,
+            "condition_audio_rows": 0,
+            "condition_video_rows": 0,
+            "latent_frames": 37,
+            "latent_height": 30,
+            "latent_width": 54,
+            "target_audio_rows": 414,
+            "target_video_rows": 14985,
+            "text_rows": 19,
+            "total_rows": 15418,
+            "video_rows": 14985
+          },
+          "pipeline": {
+            "elapsed_seconds": 119.93158898002002,
+            "finished_epoch": 1790225148.759127,
+            "started_epoch": 1790225028.8275373
+          },
+          "prepare_dit": {
+            "elapsed_seconds": 0.0691591119975783,
+            "finished_epoch": 1790225028.9414852,
+            "started_epoch": 1790225028.8723264
+          },
+          "process_memory": {
+            "vmhwm_kib": 5021232,
+            "vmrss_kib": 879604,
+            "vmsize_kib": 70738268
+          },
+          "prompt": "\u91d1\u8272\u5915\u9633\u4e0b\uff0c\u7ea2\u72d0\u7a7f\u8fc7\u8584\u96fe\u7af9\u6797\uff0c\u7535\u5f71\u611f\u955c\u5934\uff0c\u67d4\u548c\u4f53\u79ef\u5149",
+          "seed": 20260924,
+          "trial": 1
+        }
+      ]
+    },
+    {
+      "device": {
+        "compute_capability": [
+          7,
+          0
+        ],
+        "name": "Tesla V100-SXM2-16GB",
+        "total_memory_bytes": 16928342016
+      },
+      "load": {
+        "checkpoint_files": [
+          {
+            "elapsed_seconds": 10.129510488011874,
+            "file": "diffusion_pytorch_model-00009-of-00010.safetensors",
+            "file_size_bytes": 4381042288,
+            "finished_epoch": 1790224948.8580725,
+            "retained_tensor_bytes": 1386592256,
+            "source_tensor_bytes": 4381034496,
+            "started_epoch": 1790224938.728562,
+            "tensor_count": 69
+          },
+          {
+            "elapsed_seconds": 9.319657732965425,
+            "file": "diffusion_pytorch_model-00006-of-00010.safetensors",
+            "file_size_bytes": 4324765232,
+            "finished_epoch": 1790224958.2183805,
+            "retained_tensor_bytes": 1081272064,
+            "source_tensor_bytes": 4324758016,
+            "started_epoch": 1790224948.8987226,
+            "tensor_count": 62
+          },
+          {
+            "elapsed_seconds": 9.414237655000761,
+            "file": "diffusion_pytorch_model-00003-of-00010.safetensors",
+            "file_size_bytes": 4324765224,
+            "finished_epoch": 1790224967.6786249,
+            "retained_tensor_bytes": 1081272064,
+            "source_tensor_bytes": 4324758016,
+            "started_epoch": 1790224958.2643871,
+            "tensor_count": 62
+          },
+          {
+            "elapsed_seconds": 9.48749189299997,
+            "file": "diffusion_pytorch_model-00008-of-00010.safetensors",
+            "file_size_bytes": 4326530088,
+            "finished_epoch": 1790224977.221225,
+            "retained_tensor_bytes": 1081729536,
+            "source_tensor_bytes": 4326521856,
+            "started_epoch": 1790224967.7337334,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 9.42260146595072,
+            "file": "diffusion_pytorch_model-00002-of-00010.safetensors",
+            "file_size_bytes": 4326530096,
+            "finished_epoch": 1790224986.7019272,
+            "retained_tensor_bytes": 1081729536,
+            "source_tensor_bytes": 4326521856,
+            "started_epoch": 1790224977.2793257,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 9.656615943997167,
+            "file": "diffusion_pytorch_model-00004-of-00010.safetensors",
+            "file_size_bytes": 4480670736,
+            "finished_epoch": 1790224996.4137273,
+            "retained_tensor_bytes": 1120264704,
+            "source_tensor_bytes": 4480662528,
+            "started_epoch": 1790224986.7571113,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 3.0316951450076886,
+            "file": "diffusion_pytorch_model-00010-of-00010.safetensors",
+            "file_size_bytes": 772845248,
+            "finished_epoch": 1790224999.4843893,
+            "retained_tensor_bytes": 387546112,
+            "source_tensor_bytes": 772843520,
+            "started_epoch": 1790224996.452695,
+            "tensor_count": 15
+          },
+          {
+            "elapsed_seconds": 8.804572249995545,
+            "file": "diffusion_pytorch_model-00005-of-00010.safetensors",
+            "file_size_bytes": 4326530088,
+            "finished_epoch": 1790225008.305744,
+            "retained_tensor_bytes": 1081729536,
+            "source_tensor_bytes": 4326521856,
+            "started_epoch": 1790224999.5011714,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 9.725410448969342,
+            "file": "diffusion_pytorch_model-00001-of-00010.safetensors",
+            "file_size_bytes": 4481391696,
+            "finished_epoch": 1790225018.07063,
+            "retained_tensor_bytes": 1120985632,
+            "source_tensor_bytes": 4481383456,
+            "started_epoch": 1790225008.3452199,
+            "tensor_count": 72
+          },
+          {
+            "elapsed_seconds": 9.574348750989884,
+            "file": "diffusion_pytorch_model-00007-of-00010.safetensors",
+            "file_size_bytes": 4480670728,
+            "finished_epoch": 1790225027.7064872,
+            "retained_tensor_bytes": 1120264704,
+            "source_tensor_bytes": 4480662528,
+            "started_epoch": 1790225018.1321383,
+            "tensor_count": 71
+          }
+        ],
+        "component_timing": {},
+        "cuda_memory_after_load": {
+          "allocated_bytes": 10595897856,
+          "free_bytes": 5148377088,
+          "peak_allocated_bytes": 10617876992,
+          "peak_reserved_bytes": 11060379648,
+          "reserved_bytes": 11060379648,
+          "total_bytes": 16928342016
+        },
+        "elapsed_seconds": 90.11142862396082,
+        "finished_epoch": 1790225028.822267,
+        "lora_files": [],
+        "parallel_init_seconds": 0.5108577230130322,
+        "process_memory_after_load": {
+          "vmhwm_kib": 5021544,
+          "vmrss_kib": 465428,
+          "vmsize_kib": 69596400
+        },
+        "started_epoch": 1790224938.710838
+      },
+      "local_rank": 2,
+      "rank": 2,
+      "trials": [
+        {
+          "condition_path": "/home/ymzx/minimax-h3-4gpu/h3-jobs/518dda3d36894eee7bdd4c0e/conditioning.safetensors",
+          "condition_wait": {
+            "elapsed_seconds": 0.0009126759832724929,
+            "finished_epoch": 1790225028.8243814,
+            "started_epoch": 1790225028.8234684
+          },
+          "conditioning": {
+            "elapsed_seconds": 0.044492768007330596,
+            "finished_epoch": 1790225028.8723576,
+            "started_epoch": 1790225028.8278663
+          },
+          "cuda_memory": {
+            "allocated_bytes": 10605466112,
+            "free_bytes": 5114822656,
+            "peak_allocated_bytes": 13394085376,
+            "peak_reserved_bytes": 14315159552,
+            "reserved_bytes": 11081351168,
+            "total_bytes": 16928342016
+          },
+          "dit_segment": {
+            "elapsed_seconds": 119.36415150400717,
+            "finished_epoch": 1790225148.3056574,
+            "started_epoch": 1790225028.9415061
+          },
+          "job_id": "trial-1",
+          "model_evaluations": [
+            {
+              "elapsed_seconds": 6.351803186000325,
+              "finished_epoch": 1790225035.3003492,
+              "started_epoch": 1790225028.9485464
+            },
+            {
+              "elapsed_seconds": 5.922009947011247,
+              "finished_epoch": 1790225041.2247171,
+              "started_epoch": 1790225035.3027072
+            },
+            {
+              "elapsed_seconds": 5.9270100550493225,
+              "finished_epoch": 1790225047.1542673,
+              "started_epoch": 1790225041.227258
+            },
+            {
+              "elapsed_seconds": 5.936111566028558,
+              "finished_epoch": 1790225053.0927358,
+              "started_epoch": 1790225047.1566243
+            },
+            {
+              "elapsed_seconds": 5.933216140023433,
+              "finished_epoch": 1790225059.027746,
+              "started_epoch": 1790225053.09453
+            },
+            {
+              "elapsed_seconds": 5.936115987948142,
+              "finished_epoch": 1790225064.9657183,
+              "started_epoch": 1790225059.0296025
+            },
+            {
+              "elapsed_seconds": 5.940090713032987,
+              "finished_epoch": 1790225070.9076593,
+              "started_epoch": 1790225064.9675686
+            },
+            {
+              "elapsed_seconds": 5.938825885998085,
+              "finished_epoch": 1790225076.848166,
+              "started_epoch": 1790225070.9093401
+            },
+            {
+              "elapsed_seconds": 5.940985083987471,
+              "finished_epoch": 1790225082.7909348,
+              "started_epoch": 1790225076.8499498
+            },
+            {
+              "elapsed_seconds": 5.945948684995528,
+              "finished_epoch": 1790225088.7387478,
+              "started_epoch": 1790225082.7927992
+            },
+            {
+              "elapsed_seconds": 5.948463061009534,
+              "finished_epoch": 1790225094.6890402,
+              "started_epoch": 1790225088.7405772
+            },
+            {
+              "elapsed_seconds": 5.949603064975236,
+              "finished_epoch": 1790225100.6403346,
+              "started_epoch": 1790225094.6907318
+            },
+            {
+              "elapsed_seconds": 5.948470736038871,
+              "finished_epoch": 1790225106.5907032,
+              "started_epoch": 1790225100.642233
+            },
+            {
+              "elapsed_seconds": 5.95705041202018,
+              "finished_epoch": 1790225112.5495505,
+              "started_epoch": 1790225106.5925004
+            },
+            {
+              "elapsed_seconds": 5.957411275012419,
+              "finished_epoch": 1790225118.5087175,
+              "started_epoch": 1790225112.5513062
+            },
+            {
+              "elapsed_seconds": 5.957368693023454,
+              "finished_epoch": 1790225124.467969,
+              "started_epoch": 1790225118.5106006
+            },
+            {
+              "elapsed_seconds": 5.957979617000092,
+              "finished_epoch": 1790225130.4279578,
+              "started_epoch": 1790225124.4699783
+            },
+            {
+              "elapsed_seconds": 5.956008030974772,
+              "finished_epoch": 1790225136.3859391,
+              "started_epoch": 1790225130.4299312
+            },
+            {
+              "elapsed_seconds": 5.954761839995626,
+              "finished_epoch": 1790225142.3424156,
+              "started_epoch": 1790225136.3876538
+            },
+            {
+              "elapsed_seconds": 5.960842303989921,
+              "finished_epoch": 1790225148.3050966,
+              "started_epoch": 1790225142.3442545
+            }
+          ],
+          "output": "/home/ymzx/minimax-h3-4gpu/h3-jobs/518dda3d36894eee7bdd4c0e/518dda3d36894eee7bdd4c0e-trial1-latents.safetensors",
+          "packed_sequence": {
+            "audio_rows": 414,
+            "condition_audio_rows": 0,
+            "condition_video_rows": 0,
+            "latent_frames": 37,
+            "latent_height": 30,
+            "latent_width": 54,
+            "target_audio_rows": 414,
+            "target_video_rows": 14985,
+            "text_rows": 19,
+            "total_rows": 15418,
+            "video_rows": 14985
+          },
+          "pipeline": {
+            "elapsed_seconds": 119.92268730601063,
+            "finished_epoch": 1790225148.7505167,
+            "started_epoch": 1790225028.8278308
+          },
+          "prepare_dit": {
+            "elapsed_seconds": 0.06907480797963217,
+            "finished_epoch": 1790225028.9414706,
+            "started_epoch": 1790225028.8723965
+          },
+          "process_memory": {
+            "vmhwm_kib": 5021544,
+            "vmrss_kib": 862988,
+            "vmsize_kib": 70738388
+          },
+          "prompt": "\u91d1\u8272\u5915\u9633\u4e0b\uff0c\u7ea2\u72d0\u7a7f\u8fc7\u8584\u96fe\u7af9\u6797\uff0c\u7535\u5f71\u611f\u955c\u5934\uff0c\u67d4\u548c\u4f53\u79ef\u5149",
+          "seed": 20260924,
+          "trial": 1
+        }
+      ]
+    },
+    {
+      "device": {
+        "compute_capability": [
+          7,
+          0
+        ],
+        "name": "Tesla V100-SXM2-16GB",
+        "total_memory_bytes": 16928342016
+      },
+      "load": {
+        "checkpoint_files": [
+          {
+            "elapsed_seconds": 10.12723390897736,
+            "file": "diffusion_pytorch_model-00009-of-00010.safetensors",
+            "file_size_bytes": 4381042288,
+            "finished_epoch": 1790224948.8582304,
+            "retained_tensor_bytes": 1386592256,
+            "source_tensor_bytes": 4381034496,
+            "started_epoch": 1790224938.7309968,
+            "tensor_count": 69
+          },
+          {
+            "elapsed_seconds": 9.318945159029681,
+            "file": "diffusion_pytorch_model-00006-of-00010.safetensors",
+            "file_size_bytes": 4324765232,
+            "finished_epoch": 1790224958.2176673,
+            "retained_tensor_bytes": 1081272064,
+            "source_tensor_bytes": 4324758016,
+            "started_epoch": 1790224948.898722,
+            "tensor_count": 62
+          },
+          {
+            "elapsed_seconds": 9.416157919040415,
+            "file": "diffusion_pytorch_model-00003-of-00010.safetensors",
+            "file_size_bytes": 4324765224,
+            "finished_epoch": 1790224967.680456,
+            "retained_tensor_bytes": 1081272064,
+            "source_tensor_bytes": 4324758016,
+            "started_epoch": 1790224958.2642977,
+            "tensor_count": 62
+          },
+          {
+            "elapsed_seconds": 9.487439210002776,
+            "file": "diffusion_pytorch_model-00008-of-00010.safetensors",
+            "file_size_bytes": 4326530088,
+            "finished_epoch": 1790224977.2212873,
+            "retained_tensor_bytes": 1081729536,
+            "source_tensor_bytes": 4326521856,
+            "started_epoch": 1790224967.7338479,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 9.423326542018913,
+            "file": "diffusion_pytorch_model-00002-of-00010.safetensors",
+            "file_size_bytes": 4326530096,
+            "finished_epoch": 1790224986.7024794,
+            "retained_tensor_bytes": 1081729536,
+            "source_tensor_bytes": 4326521856,
+            "started_epoch": 1790224977.2791529,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 9.656455516989809,
+            "file": "diffusion_pytorch_model-00004-of-00010.safetensors",
+            "file_size_bytes": 4480670736,
+            "finished_epoch": 1790224996.4138145,
+            "retained_tensor_bytes": 1120264704,
+            "source_tensor_bytes": 4480662528,
+            "started_epoch": 1790224986.7573588,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 3.0283356190193444,
+            "file": "diffusion_pytorch_model-00010-of-00010.safetensors",
+            "file_size_bytes": 772845248,
+            "finished_epoch": 1790224999.4811065,
+            "retained_tensor_bytes": 387546112,
+            "source_tensor_bytes": 772843520,
+            "started_epoch": 1790224996.4527717,
+            "tensor_count": 15
+          },
+          {
+            "elapsed_seconds": 8.802090439014137,
+            "file": "diffusion_pytorch_model-00005-of-00010.safetensors",
+            "file_size_bytes": 4326530088,
+            "finished_epoch": 1790225008.3057609,
+            "retained_tensor_bytes": 1081729536,
+            "source_tensor_bytes": 4326521856,
+            "started_epoch": 1790224999.50367,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 9.728921255969908,
+            "file": "diffusion_pytorch_model-00001-of-00010.safetensors",
+            "file_size_bytes": 4481391696,
+            "finished_epoch": 1790225018.074173,
+            "retained_tensor_bytes": 1120985632,
+            "source_tensor_bytes": 4481383456,
+            "started_epoch": 1790225008.3452516,
+            "tensor_count": 72
+          },
+          {
+            "elapsed_seconds": 9.566804811998736,
+            "file": "diffusion_pytorch_model-00007-of-00010.safetensors",
+            "file_size_bytes": 4480670728,
+            "finished_epoch": 1790225027.69849,
+            "retained_tensor_bytes": 1120264704,
+            "source_tensor_bytes": 4480662528,
+            "started_epoch": 1790225018.131685,
+            "tensor_count": 71
+          }
+        ],
+        "component_timing": {},
+        "cuda_memory_after_load": {
+          "allocated_bytes": 10595897856,
+          "free_bytes": 5148377088,
+          "peak_allocated_bytes": 10617876992,
+          "peak_reserved_bytes": 11060379648,
+          "reserved_bytes": 11060379648,
+          "total_bytes": 16928342016
+        },
+        "elapsed_seconds": 90.10272588999942,
+        "finished_epoch": 1790225028.8135686,
+        "lora_files": [],
+        "parallel_init_seconds": 0.48152692802250385,
+        "process_memory_after_load": {
+          "vmhwm_kib": 5021024,
+          "vmrss_kib": 485124,
+          "vmsize_kib": 69596276
+        },
+        "started_epoch": 1790224938.7108424
+      },
+      "local_rank": 3,
+      "rank": 3,
+      "trials": [
+        {
+          "condition_path": "/home/ymzx/minimax-h3-4gpu/h3-jobs/518dda3d36894eee7bdd4c0e/conditioning.safetensors",
+          "condition_wait": {
+            "elapsed_seconds": 0.00036827800795435905,
+            "finished_epoch": 1790225028.815249,
+            "started_epoch": 1790225028.8148806
+          },
+          "conditioning": {
+            "elapsed_seconds": 0.04497793299378827,
+            "finished_epoch": 1790225028.8724253,
+            "started_epoch": 1790225028.8274481
+          },
+          "cuda_memory": {
+            "allocated_bytes": 10605466112,
+            "free_bytes": 5114822656,
+            "peak_allocated_bytes": 13394085376,
+            "peak_reserved_bytes": 14315159552,
+            "reserved_bytes": 11081351168,
+            "total_bytes": 16928342016
+          },
+          "dit_segment": {
+            "elapsed_seconds": 119.36423769500107,
+            "finished_epoch": 1790225148.3057425,
+            "started_epoch": 1790225028.941505
+          },
+          "job_id": "trial-1",
+          "model_evaluations": [
+            {
+              "elapsed_seconds": 6.351643850037362,
+              "finished_epoch": 1790225035.3001914,
+              "started_epoch": 1790225028.9485478
+            },
+            {
+              "elapsed_seconds": 5.921657620987389,
+              "finished_epoch": 1790225041.2244153,
+              "started_epoch": 1790225035.302758
+            },
+            {
+              "elapsed_seconds": 5.9272627489990555,
+              "finished_epoch": 1790225047.1544812,
+              "started_epoch": 1790225041.2272186
+            },
+            {
+              "elapsed_seconds": 5.936305880022701,
+              "finished_epoch": 1790225053.0929337,
+              "started_epoch": 1790225047.156628
+            },
+            {
+              "elapsed_seconds": 5.933202099986374,
+              "finished_epoch": 1790225059.0278447,
+              "started_epoch": 1790225053.0946424
+            },
+            {
+              "elapsed_seconds": 5.935953748004977,
+              "finished_epoch": 1790225064.9656062,
+              "started_epoch": 1790225059.0296526
+            },
+            {
+              "elapsed_seconds": 5.9398937890073285,
+              "finished_epoch": 1790225070.9075036,
+              "started_epoch": 1790225064.9676101
+            },
+            {
+              "elapsed_seconds": 5.938678930979222,
+              "finished_epoch": 1790225076.848101,
+              "started_epoch": 1790225070.9094222
+            },
+            {
+              "elapsed_seconds": 5.941087012004573,
+              "finished_epoch": 1790225082.791015,
+              "started_epoch": 1790225076.8499281
+            },
+            {
+              "elapsed_seconds": 5.9460237239836715,
+              "finished_epoch": 1790225088.7388089,
+              "started_epoch": 1790225082.7927854
+            },
+            {
+              "elapsed_seconds": 5.9484618729911745,
+              "finished_epoch": 1790225094.6890144,
+              "started_epoch": 1790225088.7405527
+            },
+            {
+              "elapsed_seconds": 5.949732532026246,
+              "finished_epoch": 1790225100.6404576,
+              "started_epoch": 1790225094.6907253
+            },
+            {
+              "elapsed_seconds": 5.948493070027325,
+              "finished_epoch": 1790225106.59071,
+              "started_epoch": 1790225100.6422172
+            },
+            {
+              "elapsed_seconds": 5.957059754000511,
+              "finished_epoch": 1790225112.5495489,
+              "started_epoch": 1790225106.5924892
+            },
+            {
+              "elapsed_seconds": 5.957458681019489,
+              "finished_epoch": 1790225118.5087647,
+              "started_epoch": 1790225112.551306
+            },
+            {
+              "elapsed_seconds": 5.957342843990773,
+              "finished_epoch": 1790225124.4679732,
+              "started_epoch": 1790225118.5106304
+            },
+            {
+              "elapsed_seconds": 5.9580856850370765,
+              "finished_epoch": 1790225130.428059,
+              "started_epoch": 1790225124.4699738
+            },
+            {
+              "elapsed_seconds": 5.95579399401322,
+              "finished_epoch": 1790225136.3857262,
+              "started_epoch": 1790225130.4299324
+            },
+            {
+              "elapsed_seconds": 5.954750220000278,
+              "finished_epoch": 1790225142.3423967,
+              "started_epoch": 1790225136.3876464
+            },
+            {
+              "elapsed_seconds": 5.960949166037608,
+              "finished_epoch": 1790225148.3051925,
+              "started_epoch": 1790225142.3442435
+            }
+          ],
+          "output": "/home/ymzx/minimax-h3-4gpu/h3-jobs/518dda3d36894eee7bdd4c0e/518dda3d36894eee7bdd4c0e-trial1-latents.safetensors",
+          "packed_sequence": {
+            "audio_rows": 414,
+            "condition_audio_rows": 0,
+            "condition_video_rows": 0,
+            "latent_frames": 37,
+            "latent_height": 30,
+            "latent_width": 54,
+            "target_audio_rows": 414,
+            "target_video_rows": 14985,
+            "text_rows": 19,
+            "total_rows": 15418,
+            "video_rows": 14985
+          },
+          "pipeline": {
+            "elapsed_seconds": 119.93292383599328,
+            "finished_epoch": 1790225148.7603364,
+            "started_epoch": 1790225028.8274128
+          },
+          "prepare_dit": {
+            "elapsed_seconds": 0.06900254095671698,
+            "finished_epoch": 1790225028.9414706,
+            "started_epoch": 1790225028.8724687
+          },
+          "process_memory": {
+            "vmhwm_kib": 5021024,
+            "vmrss_kib": 879852,
+            "vmsize_kib": 70738264
+          },
+          "prompt": "\u91d1\u8272\u5915\u9633\u4e0b\uff0c\u7ea2\u72d0\u7a7f\u8fc7\u8584\u96fe\u7af9\u6797\uff0c\u7535\u5f71\u611f\u955c\u5934\uff0c\u67d4\u548c\u4f53\u79ef\u5149",
+          "seed": 20260924,
+          "trial": 1
+        }
+      ]
+    }
+  ],
+  "runtime": {
+    "cuda": "12.8",
+    "distributed_environment": {
+      "CUDA_VISIBLE_DEVICES": "1,2,3,4",
+      "NCCL_ALGO": null,
+      "NCCL_P2P_DISABLE": null,
+      "NCCL_PROTO": null,
+      "NCCL_SHM_DISABLE": null
+    },
+    "nccl": [
+      2,
+      27,
+      5
+    ],
+    "process_finished_epoch": 1790225148.7907846,
+    "process_started_epoch": 1790224937.7872427,
+    "source_revision": "unknown",
+    "torch": "2.10.0+cu128",
+    "world_size": 4
+  },
+  "status": "pass"
+}

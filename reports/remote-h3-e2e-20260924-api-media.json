@@ -1,0 +1,22 @@
+{
+  "frames": 124,
+  "fps": 24,
+  "width": 864,
+  "height": 480,
+  "audio_sample_rate": 32000,
+  "video_shape": [
+    1,
+    124,
+    480,
+    864,
+    3
+  ],
+  "audio_shape": [
+    1,
+    2,
+    165600
+  ],
+  "preview": "/home/ymzx/minimax-h3-4gpu/h3-jobs/518dda3d36894eee7bdd4c0e/h3-preview.mp4",
+  "lossless": null,
+  "rgb8": null
+}

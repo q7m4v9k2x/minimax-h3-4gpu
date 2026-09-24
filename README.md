@@ -14,7 +14,7 @@
   - [rwashy/H3-V100](https://github.com/rwashy/H3-V100)：针对 V100 的 INT8 ConvRot/缩放 FP8 和显存管理，公开验证覆盖 1/2 张 16GB 卡；四卡并行仍需本机验证。
   - [Amduraznak/minimax-h3-fp16-fix](https://github.com/Amduraznak/minimax-h3-fp16-fix)：V100 原生 FP16 数值安全修复，可作为 ComfyUI 单卡/分片路径的参考。
 - 本仓库采用的目标架构是 **LightX2V 风格的真实 TP4**：4 卡共同持有分片，文本编码器也分片或卸载，VAE 单独解码；不把“4 卡分别复制完整模型”宣称为四卡共享显存。首选是 AdaLN-pruned 的 FP16/原生 PyTorch SDPA 路径；INT8/GGUF 只作为经过 SM70 内核检查后的存储压缩备选。
-- 由于工作站只有约 32GiB 主机内存，官方 BF16 权重和完整双分区服务不适合直接部署。官方 VAE 文件本身约 11GiB；第一阶段应使用 AdaLN-pruned DiT + 预计算文本 conditioning 或 CPU/分片文本编码器，并按阶段释放组件，先通过 5 秒、低分辨率 T2VA smoke test，再逐步增加分辨率和时长。
+- 由于工作站只有约 32GiB 主机内存，官方 BF16 权重和完整双分区服务不适合同时常驻。当前采用分阶段进程：ComfyUI venv 生成文本 conditioning，退出后四卡 TP4 采样，再退出 TP4 使用官方视频/音频 VAE 解码和 FFmpeg 编码。2026-09-24 已用真实中文 prompt 完成 864×480、124 帧、20 步的端到端 MP4；高分辨率和 30 步仍需单独回归。
 
 ## 快速开始
 
@@ -86,7 +86,7 @@ bash scripts/launch_env.sh
 - MiniMax H3：预留的 TP4 视频网关，入口 `/minimax-h3/`；
 - LLM：工作站当前实际启用的 vLLM 稳定入口，入口 `/llm/`。
 
-H3 页面只有在网关和 VAE 解码都返回健康状态时才允许提交任务。当前实机已经通过 DiT-only latent gate，但尚未部署视频/音频 VAE，因此页面会显示未就绪，不会把 latent 当作视频成品。
+H3 页面只有在网关和 VAE 解码都返回健康状态时才允许提交任务。当前工作站已启用 `minimax-h3.service`，公网 `/h3-api/health` 和 `/router-health/h3` 已返回 200；真实 API 任务已完成 conditioning、TP4、VAE 和 MP4 编码并返回下载链接。单 worker 会让请求排队，尚未实现 TP4 权重常驻复用。
 
 ## 许可和权重
 

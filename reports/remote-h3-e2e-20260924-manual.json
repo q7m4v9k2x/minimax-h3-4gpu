@@ -1,0 +1,1260 @@
+{
+  "benchmark": {
+    "attention": "torch_sdpa",
+    "block_finite_check": false,
+    "dtype": "FP16",
+    "feature_caching": "NoCaching",
+    "model_evaluations": 20,
+    "rms": "torch_native",
+    "rope": "torch_real_rope",
+    "sensitive_layer_dtype": "FP32",
+    "task": "t2av",
+    "tensor_parallel": 4,
+    "trials": 1
+  },
+  "case_id": "manual-real-20260924-final2",
+  "fixture": {
+    "jobs": [],
+    "jobs_manifest": null,
+    "precomputed_condition_path": "/home/ymzx/minimax-h3-4gpu/h3-jobs/manual-real-20260924-final2/conditioning.safetensors",
+    "prompt": "A cinematic golden hour shot of a red fox walking through a misty bamboo forest, gentle camera movement, realistic fur and soft volumetric light.",
+    "reference_image": null,
+    "seed": 20260924,
+    "transformer_path": "/home/ymzx/models/minimax-h3/lightx2v-fl2v-pruned"
+  },
+  "geometry": {
+    "encoded_duration_seconds": 5.166666666666667,
+    "fps": 24,
+    "frames": 124,
+    "height": 480,
+    "nominal_duration_seconds": 5,
+    "width": 864
+  },
+  "ranks": [
+    {
+      "device": {
+        "compute_capability": [
+          7,
+          0
+        ],
+        "name": "Tesla V100-SXM2-16GB",
+        "total_memory_bytes": 16928342016
+      },
+      "load": {
+        "checkpoint_files": [
+          {
+            "elapsed_seconds": 9.581590279994998,
+            "file": "diffusion_pytorch_model-00009-of-00010.safetensors",
+            "file_size_bytes": 4381042288,
+            "finished_epoch": 1790224212.42928,
+            "retained_tensor_bytes": 1386592256,
+            "source_tensor_bytes": 4381034496,
+            "started_epoch": 1790224202.8476896,
+            "tensor_count": 69
+          },
+          {
+            "elapsed_seconds": 9.079029145999812,
+            "file": "diffusion_pytorch_model-00006-of-00010.safetensors",
+            "file_size_bytes": 4324765232,
+            "finished_epoch": 1790224221.546475,
+            "retained_tensor_bytes": 1081272064,
+            "source_tensor_bytes": 4324758016,
+            "started_epoch": 1790224212.4674463,
+            "tensor_count": 62
+          },
+          {
+            "elapsed_seconds": 9.334296578017529,
+            "file": "diffusion_pytorch_model-00003-of-00010.safetensors",
+            "file_size_bytes": 4324765224,
+            "finished_epoch": 1790224230.9355516,
+            "retained_tensor_bytes": 1081272064,
+            "source_tensor_bytes": 4324758016,
+            "started_epoch": 1790224221.601256,
+            "tensor_count": 62
+          },
+          {
+            "elapsed_seconds": 8.905099911964498,
+            "file": "diffusion_pytorch_model-00008-of-00010.safetensors",
+            "file_size_bytes": 4326530088,
+            "finished_epoch": 1790224239.893967,
+            "retained_tensor_bytes": 1081729536,
+            "source_tensor_bytes": 4326521856,
+            "started_epoch": 1790224230.988867,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 9.393200649996288,
+            "file": "diffusion_pytorch_model-00002-of-00010.safetensors",
+            "file_size_bytes": 4326530096,
+            "finished_epoch": 1790224249.3264654,
+            "retained_tensor_bytes": 1081729536,
+            "source_tensor_bytes": 4326521856,
+            "started_epoch": 1790224239.9332645,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 9.446492553979624,
+            "file": "diffusion_pytorch_model-00004-of-00010.safetensors",
+            "file_size_bytes": 4480670736,
+            "finished_epoch": 1790224258.8190975,
+            "retained_tensor_bytes": 1120264704,
+            "source_tensor_bytes": 4480662528,
+            "started_epoch": 1790224249.3726053,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 2.1549529440235347,
+            "file": "diffusion_pytorch_model-00010-of-00010.safetensors",
+            "file_size_bytes": 772845248,
+            "finished_epoch": 1790224261.0275524,
+            "retained_tensor_bytes": 387546112,
+            "source_tensor_bytes": 772843520,
+            "started_epoch": 1790224258.8725996,
+            "tensor_count": 15
+          },
+          {
+            "elapsed_seconds": 9.290196212008595,
+            "file": "diffusion_pytorch_model-00005-of-00010.safetensors",
+            "file_size_bytes": 4326530088,
+            "finished_epoch": 1790224270.3236325,
+            "retained_tensor_bytes": 1081729536,
+            "source_tensor_bytes": 4326521856,
+            "started_epoch": 1790224261.0334363,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 9.759008902008645,
+            "file": "diffusion_pytorch_model-00001-of-00010.safetensors",
+            "file_size_bytes": 4481391696,
+            "finished_epoch": 1790224280.1312206,
+            "retained_tensor_bytes": 1120985632,
+            "source_tensor_bytes": 4481383456,
+            "started_epoch": 1790224270.3722115,
+            "tensor_count": 72
+          },
+          {
+            "elapsed_seconds": 9.93207944300957,
+            "file": "diffusion_pytorch_model-00007-of-00010.safetensors",
+            "file_size_bytes": 4480670728,
+            "finished_epoch": 1790224290.1124558,
+            "retained_tensor_bytes": 1120264704,
+            "source_tensor_bytes": 4480662528,
+            "started_epoch": 1790224280.1803765,
+            "tensor_count": 71
+          }
+        ],
+        "component_timing": {},
+        "cuda_memory_after_load": {
+          "allocated_bytes": 10595897856,
+          "free_bytes": 5148377088,
+          "peak_allocated_bytes": 10617876992,
+          "peak_reserved_bytes": 11060379648,
+          "reserved_bytes": 11060379648,
+          "total_bytes": 16928342016
+        },
+        "elapsed_seconds": 88.76374764699722,
+        "finished_epoch": 1790224291.5901225,
+        "lora_files": [],
+        "parallel_init_seconds": 0.5197011340060271,
+        "process_memory_after_load": {
+          "vmhwm_kib": 5518788,
+          "vmrss_kib": 488788,
+          "vmsize_kib": 69629184
+        },
+        "started_epoch": 1790224202.826374
+      },
+      "local_rank": 0,
+      "rank": 0,
+      "trials": [
+        {
+          "condition_path": "/home/ymzx/minimax-h3-4gpu/h3-jobs/manual-real-20260924-final2/conditioning.safetensors",
+          "condition_wait": {
+            "elapsed_seconds": 0.0003384849987924099,
+            "finished_epoch": 1790224291.59148,
+            "started_epoch": 1790224291.5911417
+          },
+          "conditioning": {
+            "elapsed_seconds": 0.042881350964307785,
+            "finished_epoch": 1790224291.6495383,
+            "started_epoch": 1790224291.6066575
+          },
+          "cuda_memory": {
+            "allocated_bytes": 10605466112,
+            "free_bytes": 5114822656,
+            "peak_allocated_bytes": 13396084224,
+            "peak_reserved_bytes": 14315159552,
+            "reserved_bytes": 11081351168,
+            "total_bytes": 16928342016
+          },
+          "dit_segment": {
+            "elapsed_seconds": 119.38568666996434,
+            "finished_epoch": 1790224411.1111155,
+            "started_epoch": 1790224291.725429
+          },
+          "job_id": "trial-1",
+          "latent_metadata": {
+            "audio_max": "1.50772476",
+            "audio_min": "-1.59555614",
+            "audio_shape": "(414, 32)",
+            "finite": "true",
+            "model_evaluations": "20",
+            "video_max": "4.04962826",
+            "video_min": "-4.75919819",
+            "video_shape": "(14985, 96)"
+          },
+          "model_evaluations": [
+            {
+              "elapsed_seconds": 6.399239077989478,
+              "finished_epoch": 1790224298.1318626,
+              "started_epoch": 1790224291.732624
+            },
+            {
+              "elapsed_seconds": 5.918786714959424,
+              "finished_epoch": 1790224304.055502,
+              "started_epoch": 1790224298.1367152
+            },
+            {
+              "elapsed_seconds": 5.9241587949800305,
+              "finished_epoch": 1790224309.9815032,
+              "started_epoch": 1790224304.0573447
+            },
+            {
+              "elapsed_seconds": 5.92570975999115,
+              "finished_epoch": 1790224315.90953,
+              "started_epoch": 1790224309.9838204
+            },
+            {
+              "elapsed_seconds": 5.9330290330108255,
+              "finished_epoch": 1790224321.8444967,
+              "started_epoch": 1790224315.9114678
+            },
+            {
+              "elapsed_seconds": 5.930454624991398,
+              "finished_epoch": 1790224327.7766914,
+              "started_epoch": 1790224321.846237
+            },
+            {
+              "elapsed_seconds": 5.941074414004106,
+              "finished_epoch": 1790224333.719584,
+              "started_epoch": 1790224327.7785099
+            },
+            {
+              "elapsed_seconds": 5.937745928007644,
+              "finished_epoch": 1790224339.6591115,
+              "started_epoch": 1790224333.7213657
+            },
+            {
+              "elapsed_seconds": 5.936323512985837,
+              "finished_epoch": 1790224345.5972176,
+              "started_epoch": 1790224339.6608942
+            },
+            {
+              "elapsed_seconds": 5.947672678041272,
+              "finished_epoch": 1790224351.5466747,
+              "started_epoch": 1790224345.5990024
+            },
+            {
+              "elapsed_seconds": 5.947686165978666,
+              "finished_epoch": 1790224357.4963067,
+              "started_epoch": 1790224351.5486207
+            },
+            {
+              "elapsed_seconds": 5.948027945996728,
+              "finished_epoch": 1790224363.4461186,
+              "started_epoch": 1790224357.4980907
+            },
+            {
+              "elapsed_seconds": 5.9502131039625965,
+              "finished_epoch": 1790224369.3981798,
+              "started_epoch": 1790224363.447967
+            },
+            {
+              "elapsed_seconds": 5.951646212022752,
+              "finished_epoch": 1790224375.3517919,
+              "started_epoch": 1790224369.400146
+            },
+            {
+              "elapsed_seconds": 5.957176466006786,
+              "finished_epoch": 1790224381.3107138,
+              "started_epoch": 1790224375.3535376
+            },
+            {
+              "elapsed_seconds": 5.955078949977178,
+              "finished_epoch": 1790224387.2675033,
+              "started_epoch": 1790224381.312425
+            },
+            {
+              "elapsed_seconds": 5.954682894051075,
+              "finished_epoch": 1790224393.2241104,
+              "started_epoch": 1790224387.269428
+            },
+            {
+              "elapsed_seconds": 5.956894811009988,
+              "finished_epoch": 1790224399.182835,
+              "started_epoch": 1790224393.2259405
+            },
+            {
+              "elapsed_seconds": 5.960387598024681,
+              "finished_epoch": 1790224405.1449707,
+              "started_epoch": 1790224399.1845834
+            },
+            {
+              "elapsed_seconds": 5.963788587017916,
+              "finished_epoch": 1790224411.1105492,
+              "started_epoch": 1790224405.1467607
+            }
+          ],
+          "output": "/home/ymzx/minimax-h3-4gpu/h3-jobs/manual-real-20260924-final2/manual-real-20260924-final2-trial1-latents.safetensors",
+          "output_sha256": "4369496395bb43110356bfa15ee23c7690caf843578769f671eb4dc3060b8068",
+          "output_size_bytes": 5807608,
+          "packed_sequence": {
+            "audio_rows": 414,
+            "condition_audio_rows": 0,
+            "condition_video_rows": 0,
+            "latent_frames": 37,
+            "latent_height": 30,
+            "latent_width": 54,
+            "target_audio_rows": 414,
+            "target_video_rows": 14985,
+            "text_rows": 29,
+            "total_rows": 15428,
+            "video_rows": 14985
+          },
+          "pipeline": {
+            "elapsed_seconds": 119.91849473601906,
+            "finished_epoch": 1790224411.5251153,
+            "started_epoch": 1790224291.6066213
+          },
+          "prepare_dit": {
+            "elapsed_seconds": 0.07581346802180633,
+            "finished_epoch": 1790224291.725394,
+            "started_epoch": 1790224291.649581
+          },
+          "process_memory": {
+            "vmhwm_kib": 5518788,
+            "vmrss_kib": 917500,
+            "vmsize_kib": 70800644
+          },
+          "prompt": "A cinematic golden hour shot of a red fox walking through a misty bamboo forest, gentle camera movement, realistic fur and soft volumetric light.",
+          "seed": 20260924,
+          "trial": 1
+        }
+      ]
+    },
+    {
+      "device": {
+        "compute_capability": [
+          7,
+          0
+        ],
+        "name": "Tesla V100-SXM2-16GB",
+        "total_memory_bytes": 16928342016
+      },
+      "load": {
+        "checkpoint_files": [
+          {
+            "elapsed_seconds": 9.588211200025398,
+            "file": "diffusion_pytorch_model-00009-of-00010.safetensors",
+            "file_size_bytes": 4381042288,
+            "finished_epoch": 1790224212.4330697,
+            "retained_tensor_bytes": 1386592256,
+            "source_tensor_bytes": 4381034496,
+            "started_epoch": 1790224202.8448577,
+            "tensor_count": 69
+          },
+          {
+            "elapsed_seconds": 9.081623199977912,
+            "file": "diffusion_pytorch_model-00006-of-00010.safetensors",
+            "file_size_bytes": 4324765232,
+            "finished_epoch": 1790224221.549154,
+            "retained_tensor_bytes": 1081272064,
+            "source_tensor_bytes": 4324758016,
+            "started_epoch": 1790224212.467531,
+            "tensor_count": 62
+          },
+          {
+            "elapsed_seconds": 9.337916996038985,
+            "file": "diffusion_pytorch_model-00003-of-00010.safetensors",
+            "file_size_bytes": 4324765224,
+            "finished_epoch": 1790224230.9394457,
+            "retained_tensor_bytes": 1081272064,
+            "source_tensor_bytes": 4324758016,
+            "started_epoch": 1790224221.6015294,
+            "tensor_count": 62
+          },
+          {
+            "elapsed_seconds": 8.904817535018083,
+            "file": "diffusion_pytorch_model-00008-of-00010.safetensors",
+            "file_size_bytes": 4326530088,
+            "finished_epoch": 1790224239.8936994,
+            "retained_tensor_bytes": 1081729536,
+            "source_tensor_bytes": 4326521856,
+            "started_epoch": 1790224230.988882,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 9.393311826977879,
+            "file": "diffusion_pytorch_model-00002-of-00010.safetensors",
+            "file_size_bytes": 4326530096,
+            "finished_epoch": 1790224249.326452,
+            "retained_tensor_bytes": 1081729536,
+            "source_tensor_bytes": 4326521856,
+            "started_epoch": 1790224239.93314,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 9.450938569032587,
+            "file": "diffusion_pytorch_model-00004-of-00010.safetensors",
+            "file_size_bytes": 4480670736,
+            "finished_epoch": 1790224258.8234406,
+            "retained_tensor_bytes": 1120264704,
+            "source_tensor_bytes": 4480662528,
+            "started_epoch": 1790224249.3725028,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 2.1620702209766023,
+            "file": "diffusion_pytorch_model-00010-of-00010.safetensors",
+            "file_size_bytes": 772845248,
+            "finished_epoch": 1790224261.0345354,
+            "retained_tensor_bytes": 387546112,
+            "source_tensor_bytes": 772843520,
+            "started_epoch": 1790224258.8724651,
+            "tensor_count": 15
+          },
+          {
+            "elapsed_seconds": 9.284454450011253,
+            "file": "diffusion_pytorch_model-00005-of-00010.safetensors",
+            "file_size_bytes": 4326530088,
+            "finished_epoch": 1790224270.3236687,
+            "retained_tensor_bytes": 1081729536,
+            "source_tensor_bytes": 4326521856,
+            "started_epoch": 1790224261.0392146,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 9.754502557974774,
+            "file": "diffusion_pytorch_model-00001-of-00010.safetensors",
+            "file_size_bytes": 4481391696,
+            "finished_epoch": 1790224280.1268387,
+            "retained_tensor_bytes": 1120985632,
+            "source_tensor_bytes": 4481383456,
+            "started_epoch": 1790224270.3723364,
+            "tensor_count": 72
+          },
+          {
+            "elapsed_seconds": 9.93450179696083,
+            "file": "diffusion_pytorch_model-00007-of-00010.safetensors",
+            "file_size_bytes": 4480670728,
+            "finished_epoch": 1790224290.1148489,
+            "retained_tensor_bytes": 1120264704,
+            "source_tensor_bytes": 4480662528,
+            "started_epoch": 1790224280.1803474,
+            "tensor_count": 71
+          }
+        ],
+        "component_timing": {},
+        "cuda_memory_after_load": {
+          "allocated_bytes": 10595897856,
+          "free_bytes": 5148377088,
+          "peak_allocated_bytes": 10617876992,
+          "peak_reserved_bytes": 11060379648,
+          "reserved_bytes": 11060379648,
+          "total_bytes": 16928342016
+        },
+        "elapsed_seconds": 88.76037822599756,
+        "finished_epoch": 1790224291.5866768,
+        "lora_files": [],
+        "parallel_init_seconds": 0.570128157036379,
+        "process_memory_after_load": {
+          "vmhwm_kib": 5521444,
+          "vmrss_kib": 498296,
+          "vmsize_kib": 69596288
+        },
+        "started_epoch": 1790224202.8262966
+      },
+      "local_rank": 1,
+      "rank": 1,
+      "trials": [
+        {
+          "condition_path": "/home/ymzx/minimax-h3-4gpu/h3-jobs/manual-real-20260924-final2/conditioning.safetensors",
+          "condition_wait": {
+            "elapsed_seconds": 0.000365325016900897,
+            "finished_epoch": 1790224291.5885406,
+            "started_epoch": 1790224291.5881753
+          },
+          "conditioning": {
+            "elapsed_seconds": 0.04266046197153628,
+            "finished_epoch": 1790224291.6493216,
+            "started_epoch": 1790224291.6066616
+          },
+          "cuda_memory": {
+            "allocated_bytes": 10605466112,
+            "free_bytes": 5114822656,
+            "peak_allocated_bytes": 13396084224,
+            "peak_reserved_bytes": 14315159552,
+            "reserved_bytes": 11081351168,
+            "total_bytes": 16928342016
+          },
+          "dit_segment": {
+            "elapsed_seconds": 119.38570569799049,
+            "finished_epoch": 1790224411.1111376,
+            "started_epoch": 1790224291.7254324
+          },
+          "job_id": "trial-1",
+          "model_evaluations": [
+            {
+              "elapsed_seconds": 6.399037518014666,
+              "finished_epoch": 1790224298.1316624,
+              "started_epoch": 1790224291.7326257
+            },
+            {
+              "elapsed_seconds": 5.918868120003026,
+              "finished_epoch": 1790224304.0556018,
+              "started_epoch": 1790224298.136734
+            },
+            {
+              "elapsed_seconds": 5.9233878160011955,
+              "finished_epoch": 1790224309.9814353,
+              "started_epoch": 1790224304.058048
+            },
+            {
+              "elapsed_seconds": 5.925588510988746,
+              "finished_epoch": 1790224315.9094164,
+              "started_epoch": 1790224309.9838283
+            },
+            {
+              "elapsed_seconds": 5.93301335995784,
+              "finished_epoch": 1790224321.8444529,
+              "started_epoch": 1790224315.91144
+            },
+            {
+              "elapsed_seconds": 5.930162810022011,
+              "finished_epoch": 1790224327.7764497,
+              "started_epoch": 1790224321.8462873
+            },
+            {
+              "elapsed_seconds": 5.9409988290281035,
+              "finished_epoch": 1790224333.719519,
+              "started_epoch": 1790224327.7785203
+            },
+            {
+              "elapsed_seconds": 5.937266320979688,
+              "finished_epoch": 1790224339.6586468,
+              "started_epoch": 1790224333.7213807
+            },
+            {
+              "elapsed_seconds": 5.936245446966495,
+              "finished_epoch": 1790224345.5971482,
+              "started_epoch": 1790224339.660903
+            },
+            {
+              "elapsed_seconds": 5.9476038799621165,
+              "finished_epoch": 1790224351.5466068,
+              "started_epoch": 1790224345.599003
+            },
+            {
+              "elapsed_seconds": 5.947617275000084,
+              "finished_epoch": 1790224357.4960144,
+              "started_epoch": 1790224351.548397
+            },
+            {
+              "elapsed_seconds": 5.9480355409905314,
+              "finished_epoch": 1790224363.4461274,
+              "started_epoch": 1790224357.498092
+            },
+            {
+              "elapsed_seconds": 5.950143819034565,
+              "finished_epoch": 1790224369.3981032,
+              "started_epoch": 1790224363.4479597
+            },
+            {
+              "elapsed_seconds": 5.951554586994462,
+              "finished_epoch": 1790224375.3516948,
+              "started_epoch": 1790224369.4001405
+            },
+            {
+              "elapsed_seconds": 5.957406767993234,
+              "finished_epoch": 1790224381.3109326,
+              "started_epoch": 1790224375.353526
+            },
+            {
+              "elapsed_seconds": 5.954848616966046,
+              "finished_epoch": 1790224387.2675338,
+              "started_epoch": 1790224381.3126855
+            },
+            {
+              "elapsed_seconds": 5.954649117018562,
+              "finished_epoch": 1790224393.2241478,
+              "started_epoch": 1790224387.2694988
+            },
+            {
+              "elapsed_seconds": 5.956607828964479,
+              "finished_epoch": 1790224399.1826046,
+              "started_epoch": 1790224393.2259967
+            },
+            {
+              "elapsed_seconds": 5.959970201016404,
+              "finished_epoch": 1790224405.144678,
+              "started_epoch": 1790224399.184708
+            },
+            {
+              "elapsed_seconds": 5.96378731704317,
+              "finished_epoch": 1790224411.110553,
+              "started_epoch": 1790224405.1467657
+            }
+          ],
+          "output": "/home/ymzx/minimax-h3-4gpu/h3-jobs/manual-real-20260924-final2/manual-real-20260924-final2-trial1-latents.safetensors",
+          "packed_sequence": {
+            "audio_rows": 414,
+            "condition_audio_rows": 0,
+            "condition_video_rows": 0,
+            "latent_frames": 37,
+            "latent_height": 30,
+            "latent_width": 54,
+            "target_audio_rows": 414,
+            "target_video_rows": 14985,
+            "text_rows": 29,
+            "total_rows": 15428,
+            "video_rows": 14985
+          },
+          "pipeline": {
+            "elapsed_seconds": 119.92596323299222,
+            "finished_epoch": 1790224411.532587,
+            "started_epoch": 1790224291.606624
+          },
+          "prepare_dit": {
+            "elapsed_seconds": 0.0760326809831895,
+            "finished_epoch": 1790224291.7253926,
+            "started_epoch": 1790224291.6493607
+          },
+          "process_memory": {
+            "vmhwm_kib": 5521444,
+            "vmrss_kib": 892980,
+            "vmsize_kib": 70738272
+          },
+          "prompt": "A cinematic golden hour shot of a red fox walking through a misty bamboo forest, gentle camera movement, realistic fur and soft volumetric light.",
+          "seed": 20260924,
+          "trial": 1
+        }
+      ]
+    },
+    {
+      "device": {
+        "compute_capability": [
+          7,
+          0
+        ],
+        "name": "Tesla V100-SXM2-16GB",
+        "total_memory_bytes": 16928342016
+      },
+      "load": {
+        "checkpoint_files": [
+          {
+            "elapsed_seconds": 9.588464499043766,
+            "file": "diffusion_pytorch_model-00009-of-00010.safetensors",
+            "file_size_bytes": 4381042288,
+            "finished_epoch": 1790224212.433337,
+            "retained_tensor_bytes": 1386592256,
+            "source_tensor_bytes": 4381034496,
+            "started_epoch": 1790224202.8448725,
+            "tensor_count": 69
+          },
+          {
+            "elapsed_seconds": 9.081339452008251,
+            "file": "diffusion_pytorch_model-00006-of-00010.safetensors",
+            "file_size_bytes": 4324765232,
+            "finished_epoch": 1790224221.5490184,
+            "retained_tensor_bytes": 1081272064,
+            "source_tensor_bytes": 4324758016,
+            "started_epoch": 1790224212.4676788,
+            "tensor_count": 62
+          },
+          {
+            "elapsed_seconds": 9.338193942036014,
+            "file": "diffusion_pytorch_model-00003-of-00010.safetensors",
+            "file_size_bytes": 4324765224,
+            "finished_epoch": 1790224230.9396214,
+            "retained_tensor_bytes": 1081272064,
+            "source_tensor_bytes": 4324758016,
+            "started_epoch": 1790224221.6014285,
+            "tensor_count": 62
+          },
+          {
+            "elapsed_seconds": 8.904835258959793,
+            "file": "diffusion_pytorch_model-00008-of-00010.safetensors",
+            "file_size_bytes": 4326530088,
+            "finished_epoch": 1790224239.8939233,
+            "retained_tensor_bytes": 1081729536,
+            "source_tensor_bytes": 4326521856,
+            "started_epoch": 1790224230.9890883,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 9.391214759962168,
+            "file": "diffusion_pytorch_model-00002-of-00010.safetensors",
+            "file_size_bytes": 4326530096,
+            "finished_epoch": 1790224249.3244405,
+            "retained_tensor_bytes": 1081729536,
+            "source_tensor_bytes": 4326521856,
+            "started_epoch": 1790224239.9332268,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 9.452853586990386,
+            "file": "diffusion_pytorch_model-00004-of-00010.safetensors",
+            "file_size_bytes": 4480670736,
+            "finished_epoch": 1790224258.8252897,
+            "retained_tensor_bytes": 1120264704,
+            "source_tensor_bytes": 4480662528,
+            "started_epoch": 1790224249.3724368,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 2.1621516149607487,
+            "file": "diffusion_pytorch_model-00010-of-00010.safetensors",
+            "file_size_bytes": 772845248,
+            "finished_epoch": 1790224261.034616,
+            "retained_tensor_bytes": 387546112,
+            "source_tensor_bytes": 772843520,
+            "started_epoch": 1790224258.8724647,
+            "tensor_count": 15
+          },
+          {
+            "elapsed_seconds": 9.282431459985673,
+            "file": "diffusion_pytorch_model-00005-of-00010.safetensors",
+            "file_size_bytes": 4326530088,
+            "finished_epoch": 1790224270.3221033,
+            "retained_tensor_bytes": 1081729536,
+            "source_tensor_bytes": 4326521856,
+            "started_epoch": 1790224261.0396738,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 9.75912675797008,
+            "file": "diffusion_pytorch_model-00001-of-00010.safetensors",
+            "file_size_bytes": 4481391696,
+            "finished_epoch": 1790224280.1312954,
+            "retained_tensor_bytes": 1120985632,
+            "source_tensor_bytes": 4481383456,
+            "started_epoch": 1790224270.3721688,
+            "tensor_count": 72
+          },
+          {
+            "elapsed_seconds": 9.933605051017366,
+            "file": "diffusion_pytorch_model-00007-of-00010.safetensors",
+            "file_size_bytes": 4480670728,
+            "finished_epoch": 1790224290.1140525,
+            "retained_tensor_bytes": 1120264704,
+            "source_tensor_bytes": 4480662528,
+            "started_epoch": 1790224280.1804476,
+            "tensor_count": 71
+          }
+        ],
+        "component_timing": {},
+        "cuda_memory_after_load": {
+          "allocated_bytes": 10595897856,
+          "free_bytes": 5148377088,
+          "peak_allocated_bytes": 10617876992,
+          "peak_reserved_bytes": 11060379648,
+          "reserved_bytes": 11060379648,
+          "total_bytes": 16928342016
+        },
+        "elapsed_seconds": 88.75961900601396,
+        "finished_epoch": 1790224291.5858681,
+        "lora_files": [],
+        "parallel_init_seconds": 0.49793262395542115,
+        "process_memory_after_load": {
+          "vmhwm_kib": 5520136,
+          "vmrss_kib": 486036,
+          "vmsize_kib": 69596420
+        },
+        "started_epoch": 1790224202.8262484
+      },
+      "local_rank": 2,
+      "rank": 2,
+      "trials": [
+        {
+          "condition_path": "/home/ymzx/minimax-h3-4gpu/h3-jobs/manual-real-20260924-final2/conditioning.safetensors",
+          "condition_wait": {
+            "elapsed_seconds": 0.0005251790280453861,
+            "finished_epoch": 1790224291.5886164,
+            "started_epoch": 1790224291.5880911
+          },
+          "conditioning": {
+            "elapsed_seconds": 0.042549297970253974,
+            "finished_epoch": 1790224291.6492054,
+            "started_epoch": 1790224291.6066577
+          },
+          "cuda_memory": {
+            "allocated_bytes": 10605466112,
+            "free_bytes": 5114822656,
+            "peak_allocated_bytes": 13396084224,
+            "peak_reserved_bytes": 14315159552,
+            "reserved_bytes": 11081351168,
+            "total_bytes": 16928342016
+          },
+          "dit_segment": {
+            "elapsed_seconds": 119.3855974469916,
+            "finished_epoch": 1790224411.1109693,
+            "started_epoch": 1790224291.725372
+          },
+          "job_id": "trial-1",
+          "model_evaluations": [
+            {
+              "elapsed_seconds": 6.399195495003369,
+              "finished_epoch": 1790224298.131795,
+              "started_epoch": 1790224291.7326002
+            },
+            {
+              "elapsed_seconds": 5.918556654010899,
+              "finished_epoch": 1790224304.0552504,
+              "started_epoch": 1790224298.1366942
+            },
+            {
+              "elapsed_seconds": 5.923435928008985,
+              "finished_epoch": 1790224309.9813995,
+              "started_epoch": 1790224304.057964
+            },
+            {
+              "elapsed_seconds": 5.925484215957113,
+              "finished_epoch": 1790224315.9092638,
+              "started_epoch": 1790224309.98378
+            },
+            {
+              "elapsed_seconds": 5.933115807012655,
+              "finished_epoch": 1790224321.8445292,
+              "started_epoch": 1790224315.9114137
+            },
+            {
+              "elapsed_seconds": 5.930260860011913,
+              "finished_epoch": 1790224327.776462,
+              "started_epoch": 1790224321.8462017
+            },
+            {
+              "elapsed_seconds": 5.940985592023935,
+              "finished_epoch": 1790224333.7193887,
+              "started_epoch": 1790224327.7784035
+            },
+            {
+              "elapsed_seconds": 5.937297930999193,
+              "finished_epoch": 1790224339.6586258,
+              "started_epoch": 1790224333.721328
+            },
+            {
+              "elapsed_seconds": 5.936407008965034,
+              "finished_epoch": 1790224345.5971951,
+              "started_epoch": 1790224339.6607888
+            },
+            {
+              "elapsed_seconds": 5.947795288986526,
+              "finished_epoch": 1790224351.5467148,
+              "started_epoch": 1790224345.5989196
+            },
+            {
+              "elapsed_seconds": 5.947962777980138,
+              "finished_epoch": 1790224357.4963048,
+              "started_epoch": 1790224351.5483422
+            },
+            {
+              "elapsed_seconds": 5.948156904021744,
+              "finished_epoch": 1790224363.446233,
+              "started_epoch": 1790224357.4980764
+            },
+            {
+              "elapsed_seconds": 5.950125055969693,
+              "finished_epoch": 1790224369.3980465,
+              "started_epoch": 1790224363.4479218
+            },
+            {
+              "elapsed_seconds": 5.951986009022221,
+              "finished_epoch": 1790224375.3518424,
+              "started_epoch": 1790224369.3998563
+            },
+            {
+              "elapsed_seconds": 5.957335866987705,
+              "finished_epoch": 1790224381.3107958,
+              "started_epoch": 1790224375.3534603
+            },
+            {
+              "elapsed_seconds": 5.954911630018614,
+              "finished_epoch": 1790224387.2675405,
+              "started_epoch": 1790224381.3126295
+            },
+            {
+              "elapsed_seconds": 5.95471203699708,
+              "finished_epoch": 1790224393.224127,
+              "started_epoch": 1790224387.2694156
+            },
+            {
+              "elapsed_seconds": 5.956870699999854,
+              "finished_epoch": 1790224399.1827674,
+              "started_epoch": 1790224393.225897
+            },
+            {
+              "elapsed_seconds": 5.960284516972024,
+              "finished_epoch": 1790224405.1449044,
+              "started_epoch": 1790224399.1846201
+            },
+            {
+              "elapsed_seconds": 5.963728925038595,
+              "finished_epoch": 1790224411.1104484,
+              "started_epoch": 1790224405.1467197
+            }
+          ],
+          "output": "/home/ymzx/minimax-h3-4gpu/h3-jobs/manual-real-20260924-final2/manual-real-20260924-final2-trial1-latents.safetensors",
+          "packed_sequence": {
+            "audio_rows": 414,
+            "condition_audio_rows": 0,
+            "condition_video_rows": 0,
+            "latent_frames": 37,
+            "latent_height": 30,
+            "latent_width": 54,
+            "target_audio_rows": 414,
+            "target_video_rows": 14985,
+            "text_rows": 29,
+            "total_rows": 15428,
+            "video_rows": 14985
+          },
+          "pipeline": {
+            "elapsed_seconds": 119.92209194495808,
+            "finished_epoch": 1790224411.5287135,
+            "started_epoch": 1790224291.606622
+          },
+          "prepare_dit": {
+            "elapsed_seconds": 0.07609380903886631,
+            "finished_epoch": 1790224291.7253387,
+            "started_epoch": 1790224291.6492453
+          },
+          "process_memory": {
+            "vmhwm_kib": 5520136,
+            "vmrss_kib": 881772,
+            "vmsize_kib": 70738408
+          },
+          "prompt": "A cinematic golden hour shot of a red fox walking through a misty bamboo forest, gentle camera movement, realistic fur and soft volumetric light.",
+          "seed": 20260924,
+          "trial": 1
+        }
+      ]
+    },
+    {
+      "device": {
+        "compute_capability": [
+          7,
+          0
+        ],
+        "name": "Tesla V100-SXM2-16GB",
+        "total_memory_bytes": 16928342016
+      },
+      "load": {
+        "checkpoint_files": [
+          {
+            "elapsed_seconds": 9.585521732980851,
+            "file": "diffusion_pytorch_model-00009-of-00010.safetensors",
+            "file_size_bytes": 4381042288,
+            "finished_epoch": 1790224212.4333298,
+            "retained_tensor_bytes": 1386592256,
+            "source_tensor_bytes": 4381034496,
+            "started_epoch": 1790224202.8478084,
+            "tensor_count": 69
+          },
+          {
+            "elapsed_seconds": 9.080432573973667,
+            "file": "diffusion_pytorch_model-00006-of-00010.safetensors",
+            "file_size_bytes": 4324765232,
+            "finished_epoch": 1790224221.5479944,
+            "retained_tensor_bytes": 1081272064,
+            "source_tensor_bytes": 4324758016,
+            "started_epoch": 1790224212.467562,
+            "tensor_count": 62
+          },
+          {
+            "elapsed_seconds": 9.338264964986593,
+            "file": "diffusion_pytorch_model-00003-of-00010.safetensors",
+            "file_size_bytes": 4324765224,
+            "finished_epoch": 1790224230.9395726,
+            "retained_tensor_bytes": 1081272064,
+            "source_tensor_bytes": 4324758016,
+            "started_epoch": 1790224221.6013076,
+            "tensor_count": 62
+          },
+          {
+            "elapsed_seconds": 8.90481436403934,
+            "file": "diffusion_pytorch_model-00008-of-00010.safetensors",
+            "file_size_bytes": 4326530088,
+            "finished_epoch": 1790224239.8938117,
+            "retained_tensor_bytes": 1081729536,
+            "source_tensor_bytes": 4326521856,
+            "started_epoch": 1790224230.9889975,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 9.393202237959486,
+            "file": "diffusion_pytorch_model-00002-of-00010.safetensors",
+            "file_size_bytes": 4326530096,
+            "finished_epoch": 1790224249.3263905,
+            "retained_tensor_bytes": 1081729536,
+            "source_tensor_bytes": 4326521856,
+            "started_epoch": 1790224239.9331882,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 9.452798178012017,
+            "file": "diffusion_pytorch_model-00004-of-00010.safetensors",
+            "file_size_bytes": 4480670736,
+            "finished_epoch": 1790224258.8252573,
+            "retained_tensor_bytes": 1120264704,
+            "source_tensor_bytes": 4480662528,
+            "started_epoch": 1790224249.3724594,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 2.1609743050066754,
+            "file": "diffusion_pytorch_model-00010-of-00010.safetensors",
+            "file_size_bytes": 772845248,
+            "finished_epoch": 1790224261.0334918,
+            "retained_tensor_bytes": 387546112,
+            "source_tensor_bytes": 772843520,
+            "started_epoch": 1790224258.8725173,
+            "tensor_count": 15
+          },
+          {
+            "elapsed_seconds": 9.285267792991363,
+            "file": "diffusion_pytorch_model-00005-of-00010.safetensors",
+            "file_size_bytes": 4326530088,
+            "finished_epoch": 1790224270.323505,
+            "retained_tensor_bytes": 1081729536,
+            "source_tensor_bytes": 4326521856,
+            "started_epoch": 1790224261.0382378,
+            "tensor_count": 71
+          },
+          {
+            "elapsed_seconds": 9.75893738202285,
+            "file": "diffusion_pytorch_model-00001-of-00010.safetensors",
+            "file_size_bytes": 4481391696,
+            "finished_epoch": 1790224280.1311145,
+            "retained_tensor_bytes": 1120985632,
+            "source_tensor_bytes": 4481383456,
+            "started_epoch": 1790224270.3721764,
+            "tensor_count": 72
+          },
+          {
+            "elapsed_seconds": 9.934204491961282,
+            "file": "diffusion_pytorch_model-00007-of-00010.safetensors",
+            "file_size_bytes": 4480670728,
+            "finished_epoch": 1790224290.1145568,
+            "retained_tensor_bytes": 1120264704,
+            "source_tensor_bytes": 4480662528,
+            "started_epoch": 1790224280.1803524,
+            "tensor_count": 71
+          }
+        ],
+        "component_timing": {},
+        "cuda_memory_after_load": {
+          "allocated_bytes": 10595897856,
+          "free_bytes": 5148377088,
+          "peak_allocated_bytes": 10617876992,
+          "peak_reserved_bytes": 11060379648,
+          "reserved_bytes": 11060379648,
+          "total_bytes": 16928342016
+        },
+        "elapsed_seconds": 88.76222146005603,
+        "finished_epoch": 1790224291.588563,
+        "lora_files": [],
+        "parallel_init_seconds": 0.5240041489596479,
+        "process_memory_after_load": {
+          "vmhwm_kib": 5518764,
+          "vmrss_kib": 481756,
+          "vmsize_kib": 69596408
+        },
+        "started_epoch": 1790224202.8263402
+      },
+      "local_rank": 3,
+      "rank": 3,
+      "trials": [
+        {
+          "condition_path": "/home/ymzx/minimax-h3-4gpu/h3-jobs/manual-real-20260924-final2/conditioning.safetensors",
+          "condition_wait": {
+            "elapsed_seconds": 0.00023255404084920883,
+            "finished_epoch": 1790224291.5900419,
+            "started_epoch": 1790224291.589809
+          },
+          "conditioning": {
+            "elapsed_seconds": 0.0427453099982813,
+            "finished_epoch": 1790224291.6493971,
+            "started_epoch": 1790224291.6066527
+          },
+          "cuda_memory": {
+            "allocated_bytes": 10605466112,
+            "free_bytes": 5114822656,
+            "peak_allocated_bytes": 13396084224,
+            "peak_reserved_bytes": 14315159552,
+            "reserved_bytes": 11081351168,
+            "total_bytes": 16928342016
+          },
+          "dit_segment": {
+            "elapsed_seconds": 119.38554763101274,
+            "finished_epoch": 1790224411.1109507,
+            "started_epoch": 1790224291.725403
+          },
+          "job_id": "trial-1",
+          "model_evaluations": [
+            {
+              "elapsed_seconds": 6.399126776959747,
+              "finished_epoch": 1790224298.1317503,
+              "started_epoch": 1790224291.7326243
+            },
+            {
+              "elapsed_seconds": 5.918798807018902,
+              "finished_epoch": 1790224304.0555182,
+              "started_epoch": 1790224298.1367197
+            },
+            {
+              "elapsed_seconds": 5.923551229992881,
+              "finished_epoch": 1790224309.981525,
+              "started_epoch": 1790224304.057974
+            },
+            {
+              "elapsed_seconds": 5.92562234099023,
+              "finished_epoch": 1790224315.9094386,
+              "started_epoch": 1790224309.9838166
+            },
+            {
+              "elapsed_seconds": 5.933075106993783,
+              "finished_epoch": 1790224321.8445446,
+              "started_epoch": 1790224315.91147
+            },
+            {
+              "elapsed_seconds": 5.930057904974092,
+              "finished_epoch": 1790224327.776359,
+              "started_epoch": 1790224321.8463016
+            },
+            {
+              "elapsed_seconds": 5.941104279016145,
+              "finished_epoch": 1790224333.719619,
+              "started_epoch": 1790224327.7785149
+            },
+            {
+              "elapsed_seconds": 5.937314418028109,
+              "finished_epoch": 1790224339.6586983,
+              "started_epoch": 1790224333.721384
+            },
+            {
+              "elapsed_seconds": 5.9363650609739125,
+              "finished_epoch": 1790224345.5972397,
+              "started_epoch": 1790224339.660875
+            },
+            {
+              "elapsed_seconds": 5.9478321530041285,
+              "finished_epoch": 1790224351.546818,
+              "started_epoch": 1790224345.598986
+            },
+            {
+              "elapsed_seconds": 5.947591258038301,
+              "finished_epoch": 1790224357.4962358,
+              "started_epoch": 1790224351.5486445
+            },
+            {
+              "elapsed_seconds": 5.9480839089956135,
+              "finished_epoch": 1790224363.4461443,
+              "started_epoch": 1790224357.4980602
+            },
+            {
+              "elapsed_seconds": 5.9501193390460685,
+              "finished_epoch": 1790224369.3980837,
+              "started_epoch": 1790224363.4479647
+            },
+            {
+              "elapsed_seconds": 5.951934445009101,
+              "finished_epoch": 1790224375.3518198,
+              "started_epoch": 1790224369.3998854
+            },
+            {
+              "elapsed_seconds": 5.957350398995914,
+              "finished_epoch": 1790224381.3109248,
+              "started_epoch": 1790224375.3535748
+            },
+            {
+              "elapsed_seconds": 5.954815507051535,
+              "finished_epoch": 1790224387.2674723,
+              "started_epoch": 1790224381.3126574
+            },
+            {
+              "elapsed_seconds": 5.954386326950043,
+              "finished_epoch": 1790224393.2238946,
+              "started_epoch": 1790224387.2695084
+            },
+            {
+              "elapsed_seconds": 5.95682277798187,
+              "finished_epoch": 1790224399.1827562,
+              "started_epoch": 1790224393.2259333
+            },
+            {
+              "elapsed_seconds": 5.959947105962783,
+              "finished_epoch": 1790224405.1446147,
+              "started_epoch": 1790224399.1846678
+            },
+            {
+              "elapsed_seconds": 5.963643666997086,
+              "finished_epoch": 1790224411.1103835,
+              "started_epoch": 1790224405.14674
+            }
+          ],
+          "output": "/home/ymzx/minimax-h3-4gpu/h3-jobs/manual-real-20260924-final2/manual-real-20260924-final2-trial1-latents.safetensors",
+          "packed_sequence": {
+            "audio_rows": 414,
+            "condition_audio_rows": 0,
+            "condition_video_rows": 0,
+            "latent_frames": 37,
+            "latent_height": 30,
+            "latent_width": 54,
+            "target_audio_rows": 414,
+            "target_video_rows": 14985,
+            "text_rows": 29,
+            "total_rows": 15428,
+            "video_rows": 14985
+          },
+          "pipeline": {
+            "elapsed_seconds": 119.92909753898857,
+            "finished_epoch": 1790224411.5357132,
+            "started_epoch": 1790224291.606616
+          },
+          "prepare_dit": {
+            "elapsed_seconds": 0.07592759799445048,
+            "finished_epoch": 1790224291.725369,
+            "started_epoch": 1790224291.649442
+          },
+          "process_memory": {
+            "vmhwm_kib": 5518764,
+            "vmrss_kib": 877104,
+            "vmsize_kib": 70738400
+          },
+          "prompt": "A cinematic golden hour shot of a red fox walking through a misty bamboo forest, gentle camera movement, realistic fur and soft volumetric light.",
+          "seed": 20260924,
+          "trial": 1
+        }
+      ]
+    }
+  ],
+  "runtime": {
+    "cuda": "12.8",
+    "distributed_environment": {
+      "CUDA_VISIBLE_DEVICES": "1,2,3,4",
+      "NCCL_ALGO": null,
+      "NCCL_P2P_DISABLE": null,
+      "NCCL_PROTO": null,
+      "NCCL_SHM_DISABLE": null
+    },
+    "nccl": [
+      2,
+      27,
+      5
+    ],
+    "process_finished_epoch": 1790224411.5608203,
+    "process_started_epoch": 1790224201.8862379,
+    "source_revision": "unknown",
+    "torch": "2.10.0+cu128",
+    "world_size": 4
+  },
+  "status": "pass"
+}

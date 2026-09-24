@@ -3,6 +3,8 @@ reports/*.csv
 reports/*.log
 reports/*.mp4
 reports/*.png
+reports/backups/
+reports/poster-dummy.jpg
 .venv/
 __pycache__/
 *.pyc

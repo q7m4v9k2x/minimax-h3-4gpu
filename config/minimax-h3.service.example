@@ -1,0 +1,28 @@
+[Unit]
+Description=MiniMax H3 4GPU video gateway
+After=network-online.target vllm-tunnel.service
+Wants=network-online.target
+Requires=vllm-tunnel.service
+
+[Service]
+Type=simple
+User=ymzx
+Group=ymzx
+WorkingDirectory=/home/ymzx/minimax-h3-4gpu
+Environment=HOME=/home/ymzx
+Environment=PYTHONUNBUFFERED=1
+# V100 SM70 must use the ComfyUI cu128 PyTorch build. The h3-venv cu130
+# build currently has no sm70 kernel image.
+Environment=H3_PIPELINE_PYTHON=/home/ymzx/ComfyUI/venv/bin/python
+Environment=H3_TORCHRUN=/home/ymzx/ComfyUI/venv/bin/torchrun
+Environment=H3_PIPELINE_VERIFIED=1
+Environment=H3_QUEUE_SIZE=8
+ExecStart=/home/ymzx/ComfyUI/venv/bin/python /home/ymzx/minimax-h3-4gpu/webui/service.py --host 127.0.0.1 --port 8200 --verified
+Restart=always
+RestartSec=10
+TimeoutStopSec=30
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

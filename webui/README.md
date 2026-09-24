@@ -1,9 +1,45 @@
-# YMZX AI 工作台
+# MiniMax H3 网关
 
-`index.html` 是部署在 Oracle 140 上的统一入口。它通过同源健康检查自动识别：
+`service.py` 是纯 Python 标准库 HTTP 服务。它只启动一个流水线 worker，任务和每次状态更新写入 `H3_DATA_DIR`（默认项目根目录的 `h3-jobs/`），因此进程重启后仍可查询历史任务；重启时正在运行的任务会标记为 `interrupted`，排队任务会恢复到队列。
 
-- `Qwen Image 2.1`：`/router-health/image` → 本地工作站的 Qwen 网关；
-- `MiniMax H3`：`/router-health/h3` → 预留的 H3 网关；
-- `LLM`：`/router-health/llm` → 当前实际运行的 vLLM 稳定入口。
+启动（推荐从项目根目录执行，但不依赖当前工作目录）：
 
-`h3.html` 只在 H3 网关和 VAE 都在线时允许提交任务。当前工作站已验证 H3 TP4 DiT latent，但没有视频/音频 VAE，所以页面会保持未就绪，不会把 latent 伪装成成品视频。
+```bash
+cd /home/ymzx/minimax-h3-4gpu
+python3 webui/service.py --host 127.0.0.1 --port 8200 --verified
+```
+
+工作站的 V100 生产服务由 `minimax-h3.service` 管理。由于 H3 独立环境中的
+PyTorch cu130 wheel 不包含 SM70，生产 unit 显式使用
+`/home/ymzx/ComfyUI/venv/bin/python` 和同环境的 `torchrun`；该环境已验证
+包含 `sm_70`。可参考 `config/minimax-h3.service.example`，不要改成裸
+`torchrun` 或 `/home/ymzx/h3-venv/bin/torchrun`。
+
+默认 worker 执行：
+
+```text
+/home/ymzx/minimax-h3-4gpu/scripts/generate_video.py \
+  --request-json <job>/request.json --output-dir <job>
+```
+
+也可用 `H3_PIPELINE_PYTHON`、`H3_PIPELINE_SCRIPT`、`H3_DATA_DIR`、`H3_QUEUE_SIZE`、`H3_PUBLIC_PREFIX` 覆盖默认值。提交开关只有在流水线 `--check` 返回 `{"ready": true}` 且传入 `--verified` 后才打开。
+
+接口基路径默认为 `/h3-api`：
+
+| 方法 | 路径 | 用途 |
+| --- | --- | --- |
+| GET | `/health` 或 `/healthz` | 服务和流水线资源检查；未就绪返回 503 |
+| POST | `/h3-api/v1/videos/generations` | 创建任务，返回 202 和任务快照 |
+| GET | `/h3-api/jobs` | 最近任务列表 |
+| GET | `/h3-api/jobs/<id>` | 查询任务；页面刷新后用此接口恢复 |
+| GET | `/h3-api/jobs/<id>/events` | SSE `job` 事件和心跳 |
+| POST | `/h3-api/jobs/<id>/cancel` | 取消排队或正在运行的任务 |
+| GET/HEAD | `/h3-api/files/<id>/<name>` | 下载结果，支持 `Range: bytes=...` |
+
+任务请求示例：
+
+```json
+{"prompt":"海边日落，一只狗奔跑","width":480,"height":864,"frames":124,"steps":20,"seed":-1}
+```
+
+`h3.html` 将任务 id 保存在浏览器 `localStorage`，打开或刷新页面时先查询任务，再订阅 SSE；断线时自动回退到查询。结果文件仅从任务目录内校验过的流水线输出提供，避免路径穿越。
